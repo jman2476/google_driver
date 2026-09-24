@@ -4,7 +4,7 @@ This guide walks through configuring Google Cloud Platform (GCP) to enable OAuth
 
 ---
 
-## 1. Create or Select a GCP Project
+## 1. Create or Select a GCP Project **[Done]**
 
 1. Navigate to the [Google Cloud Console](https://console.cloud.google.com/).
 2. Log in with the Google account you want to use.
@@ -16,7 +16,7 @@ This guide walks through configuring Google Cloud Platform (GCP) to enable OAuth
 
 ---
 
-## 2. Enable the Google Drive API
+## 2. Enable the Google Drive API  **[]**
 
 1. In the left navigation menu (or search bar), go to **APIs & Services > Library**.
 2. Search for **Google Drive API**.
@@ -25,7 +25,7 @@ This guide walks through configuring Google Cloud Platform (GCP) to enable OAuth
 
 ---
 
-## 3. Configure the OAuth Consent Screen
+## 3. Configure the OAuth Consent Screen  **[]**
 
 Google requires you to set up an OAuth consent screen so users know what application is requesting access and what permissions are required.
 
@@ -35,14 +35,14 @@ Google requires you to set up an OAuth consent screen so users know what applica
    * **External**: Choose this if you are using a standard `@gmail.com` account or want anyone with a Google account to be able to authorize (app will start in "Testing" mode).
 3. Click **Create**.
 
-### App Information
+### App Information   **[]**
 * **App name**: `Google Driver CLI` (or your preferred name).
 * **User support email**: Select your email address from the dropdown.
 * **Developer contact information**: Enter your email address.
 * Leave logos and domain fields blank for now.
 * Click **Save and Continue**.
 
-### Scopes
+### Scopes   **[]**
 1. Click **Add or Remove Scopes**.
 2. Filter or search for `Google Drive API`.
 3. Choose the appropriate scope based on your security preference:
@@ -56,7 +56,7 @@ Google requires you to set up an OAuth consent screen so users know what applica
      * *Why*: Useful if your CLI needs to view, update, or overwrite existing files created outside of the CLI.
 4. Check the desired scope, click **Update**, and then click **Save and Continue**.
 
-### Test Users (Crucial for "External" Apps)
+### Test Users (Crucial for "External" Apps)   **[]**
 Because your application is in **Testing** status and not officially verified by Google:
 1. Click **+ ADD USERS**.
 2. Enter the Google/Gmail address(es) that will test the CLI tool.
@@ -68,7 +68,7 @@ Because your application is in **Testing** status and not officially verified by
 
 ---
 
-## 4. Create OAuth 2.0 Client Credentials
+## 4. Create OAuth 2.0 Client Credentials   **[]**
 
 1. In the left sidebar, navigate to **APIs & Services > Credentials**.
 2. Click **+ CREATE CREDENTIALS** at the top, then choose **OAuth client ID**.
@@ -79,7 +79,7 @@ Because your application is in **Testing** status and not officially verified by
 
 ---
 
-## 5. Download and Store `credentials.json`
+## 5. Download and Store `credentials.json`   **[]**
 
 1. Once created, a popup will display your Client ID and Client Secret. Click **DOWNLOAD JSON** (or find your client under **OAuth 2.0 Client IDs** in the list and click the download button ⬇️ on the right).
 2. Rename the downloaded file to `credentials.json`.
@@ -96,7 +96,7 @@ Because your application is in **Testing** status and not officially verified by
 
 ---
 
-## 6. What to Expect on First Login (Consent Screen Warning)
+## 6. What to Expect on First Login (Consent Screen Warning)   **[]**
 
 When running your CLI for the first time and visiting the generated OAuth consent URL:
 1. Google may display a screen titled: **"Google hasn't verified this app"**.
