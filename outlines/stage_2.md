@@ -7,7 +7,7 @@ This outline covers the high-level steps required to implement the OAuth 2.0 cli
 ### 1. Load Application Credentials
 * Read and parse `credentials.json` into an `oauth2.Config` object with the appropriate Drive scopes.
 * **Details & Implementation Notes**:
-  * 
+  * Use oauth2/google package to generate config
   * 
 
 ---
