@@ -31,5 +31,7 @@ go.work.sum
 # .idea/
 # .vscode/
 
-# 0Auth information
+# OAuth and Authentication
 credentials.json
+token.json
+*.token
