@@ -22,13 +22,15 @@ func LoadCredentials() (*oauth2.Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		errMsg := fmt.Errorf(
-		"error reading credentials.json: %w", err,
+			"error reading credentials.json: %w", err,
 		)
 		return nil, errMsg
 	}
 
-	// TODO: add option to choose between drive.DriveScope
-	// 		and drive.DriveFileScope
+	// TODO: add option to choose between
+	// 		drive.DriveScope -> full access
+	// 		and
+	// 		drive.DriveFileScope -> restricted access
 	config, err := google.ConfigFromJSON(
 		data, drive.DriveScope)
 	if err != nil {
