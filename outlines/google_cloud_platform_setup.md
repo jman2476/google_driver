@@ -16,7 +16,7 @@ This guide walks through configuring Google Cloud Platform (GCP) to enable OAuth
 
 ---
 
-## 2. Enable the Google Drive API  **[]**
+## 2. Enable the Google Drive API  **[Done]**
 
 1. In the left navigation menu (or search bar), go to **APIs & Services > Library**.
 2. Search for **Google Drive API**.
@@ -25,7 +25,7 @@ This guide walks through configuring Google Cloud Platform (GCP) to enable OAuth
 
 ---
 
-## 3. Configure the OAuth Consent Screen  **[]**
+## 3. Configure the OAuth Consent Screen  **[Done]**
 
 Google requires you to set up an OAuth consent screen so users know what application is requesting access and what permissions are required.
 
@@ -35,14 +35,14 @@ Google requires you to set up an OAuth consent screen so users know what applica
    * **External**: Choose this if you are using a standard `@gmail.com` account or want anyone with a Google account to be able to authorize (app will start in "Testing" mode).
 3. Click **Create**.
 
-### App Information   **[]**
+### App Information   **[Done]**
 * **App name**: `Google Driver CLI` (or your preferred name).
 * **User support email**: Select your email address from the dropdown.
 * **Developer contact information**: Enter your email address.
 * Leave logos and domain fields blank for now.
 * Click **Save and Continue**.
 
-### Scopes   **[]**
+### Scopes   **[Done]**
 1. Click **Add or Remove Scopes**.
 2. Filter or search for `Google Drive API`.
 3. Choose the appropriate scope based on your security preference:
@@ -56,7 +56,7 @@ Google requires you to set up an OAuth consent screen so users know what applica
      * *Why*: Useful if your CLI needs to view, update, or overwrite existing files created outside of the CLI.
 4. Check the desired scope, click **Update**, and then click **Save and Continue**.
 
-### Test Users (Crucial for "External" Apps)   **[]**
+### Test Users (Crucial for "External" Apps)   **[Done]**
 Because your application is in **Testing** status and not officially verified by Google:
 1. Click **+ ADD USERS**.
 2. Enter the Google/Gmail address(es) that will test the CLI tool.
