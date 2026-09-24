@@ -32,4 +32,4 @@ go.work.sum
 # .vscode/
 
 # 0Auth information
-OAuth-client-data.json
+credentials.json
