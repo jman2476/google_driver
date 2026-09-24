@@ -79,7 +79,7 @@ Because your application is in **Testing** status and not officially verified by
 
 ---
 
-## 5. Download and Store `credentials.json`   **[]**
+## 5. Download and Store `credentials.json`   **[Done]**
 
 1. Once created, a popup will display your Client ID and Client Secret. Click **DOWNLOAD JSON** (or find your client under **OAuth 2.0 Client IDs** in the list and click the download button ⬇️ on the right).
 2. Rename the downloaded file to `credentials.json`.
