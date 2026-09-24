@@ -68,7 +68,7 @@ Because your application is in **Testing** status and not officially verified by
 
 ---
 
-## 4. Create OAuth 2.0 Client Credentials   **[]**
+## 4. Create OAuth 2.0 Client Credentials   **[Done]**
 
 1. In the left sidebar, navigate to **APIs & Services > Credentials**.
 2. Click **+ CREATE CREDENTIALS** at the top, then choose **OAuth client ID**.
