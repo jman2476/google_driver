@@ -25,8 +25,25 @@ This outline covers the high-level steps required to implement the OAuth 2.0 cli
 * If no cached token exists (or if invalid), generate Google's OAuth consent URL requesting offline access (`access_type=offline`).
 * Direct the user to the consent URL and capture the authorization code (e.g., via terminal prompt or temporary localhost callback).
 * **Details & Implementation Notes**:
-  * 
-  * 
+  * Currently will use a copy-paste to capture the authorization code:
+Approach A: Terminal Input (Simplest)
+Print the URL to the terminal, and prompt the user to paste the code back in.
+
+Methods & Functions to use:
+
+fmt.Printf(...) / fmt.Println(...) to display instructions and the URL.
+bufio.NewReader(os.Stdin).ReadString('\n') or fmt.Scan(&authCode) to capture the code from user input.
+strings.TrimSpace(authCode) to strip trailing newlines and whitespace.
+
+  * In future, will spin up server to capture the auth code: 
+  Approach B: Temporary Local Web Server (Best UX)
+Desktop client IDs on Google Cloud allow redirects to http://localhost:<port>. You spin up a temporary local HTTP server, the browser redirects to it automatically upon user consent, and the server grabs the code from the query parameters.
+
+Methods & Functions to use:
+
+net.Listen("tcp", "localhost:8080") or http.Server
+r.URL.Query().Get("code") inside your http.HandlerFunc to extract ?code=...
+server.Shutdown(ctx) once the code is captured.
 
 ---
 

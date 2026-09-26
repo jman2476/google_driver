@@ -30,3 +30,16 @@ func ReadTokenData() (*oauth2.Token, error) {
 
 	return token, nil
 }
+
+func GetAuthorization(c *oauth2.Config) error {
+	authURL := c.AuthCodeURL(
+		"state-token",
+		oauth2.AccessTypeOffline,
+		oauth2.ApprovalForce,
+	)
+
+	fmt.Println("To log in, copy the URL below and paste it into your browser:")
+	fmt.Println(authURL)
+
+	return nil
+}

@@ -42,3 +42,11 @@ func LoadCredentials() (*oauth2.Config, error) {
 
 	return config, nil
 }
+
+func PrintConfig(c *oauth2.Config) {
+	fmt.Printf("Client ID: %v\n", c.ClientID)
+	fmt.Printf("Client Secret: %v\n", c.ClientSecret)
+	fmt.Printf("Client Endpoint: %v\n", c.Endpoint)
+	fmt.Printf("Redirect URL: %v\n", c.RedirectURL)
+	fmt.Printf("Scopes: %v\n", c.Scopes)
+}
