@@ -21,11 +21,11 @@ func main() {
 
 		authCode, err := auth.GetAuthorization(config)
 		if err != nil {
-			fmt.Printf("Error getting authorization: %w", err)
+			fmt.Printf("Error getting authorization: %v", err)
 		} else {
 			token, err := auth.GetToken(config, authCode)
 			if err != nil {
-				fmt.Printf("Error getting token: %w", err)
+				fmt.Printf("Error getting token: %v", err)
 			} else {
 				fmt.Printf("Token pointer: %v", token)
 			}
