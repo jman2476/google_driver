@@ -45,6 +45,91 @@ net.Listen("tcp", "localhost:8080") or http.Server
 r.URL.Query().Get("code") inside your http.HandlerFunc to extract ?code=...
 server.Shutdown(ctx) once the code is captured.
 
+Full Gemini output:
+Viewed stage_2.md:15-30
+Viewed token.go:1-38
+Viewed login.go:1-2
+Viewed credentials.go:1-53
+
+To implement **Stage 2, Step 3** ("Obtain Authorization Code"), you will primarily use methods from the **`golang.org/x/oauth2`** package and the standard library (`fmt`, `bufio`/`os`, or `net/http`).
+
+Here is a breakdown of the specific methods and two common patterns for capturing the code.
+
+---
+
+### 1. Generating the Consent URL
+
+Use the `AuthCodeURL` method on your `*oauth2.Config`:
+
+```go
+authURL := config.AuthCodeURL(
+    "state-token",               // state: anti-CSRF token (or any identifier string)
+    oauth2.AccessTypeOffline,    // CRUCIAL: requests a refresh token so user stays logged in
+    oauth2.ApprovalForce,        // (Optional) forces consent prompt to ensure refresh token is issued
+)
+```
+
+* **`config.AuthCodeURL(...)`**: Generates the Google OAuth 2.0 URL containing your client ID, requested scopes, and redirect URI.
+* **`oauth2.AccessTypeOffline`**: Instructs Google to issue a **refresh token** in addition to a short-lived access token.
+
+---
+
+### 2. Capturing the Authorization Code
+
+There are two approaches to capture the code from the user:
+
+#### Approach A: Terminal Input (Simplest)
+Print the URL to the terminal, and prompt the user to paste the code back in.
+
+**Methods & Functions to use:**
+* `fmt.Printf(...)` / `fmt.Println(...)` to display instructions and the URL.
+* `bufio.NewReader(os.Stdin).ReadString('\n')` or `fmt.Scan(&authCode)` to capture the code from user input.
+* `strings.TrimSpace(authCode)` to strip trailing newlines and whitespace.
+
+```go
+fmt.Printf("Go to this URL in your browser:\n\n%v\n\n", authURL)
+fmt.Print("Enter authorization code: ")
+
+var code string
+if _, err := fmt.Scan(&code); err != nil {
+    return nil, fmt.Errorf("unable to read authorization code: %w", err)
+}
+```
+
+---
+
+#### Approach B: Temporary Local Web Server (Best UX)
+Desktop client IDs on Google Cloud allow redirects to `http://localhost:<port>`. You spin up a temporary local HTTP server, the browser redirects to it automatically upon user consent, and the server grabs the code from the query parameters.
+
+**Methods & Functions to use:**
+* `net.Listen("tcp", "localhost:8080")` or `http.Server`
+* `r.URL.Query().Get("code")` inside your `http.HandlerFunc` to extract `?code=...`
+* `server.Shutdown(ctx)` once the code is captured.
+
+---
+
+### 3. Exchanging Code for Token (Step 4 preview)
+
+Once you have the authorization code string, exchange it for the actual `*oauth2.Token`:
+
+```go
+token, err := config.Exchange(context.Background(), code)
+if err != nil {
+    return nil, fmt.Errorf("unable to retrieve token from web: %w", err)
+}
+```
+
+* **`config.Exchange(ctx, code)`**: Sends a POST request to Google's token endpoint (`https://oauth2.googleapis.com/token`) exchanging the one-time authorization code for an `*oauth2.Token` containing:
+  * `token.AccessToken`
+  * `token.RefreshToken`
+  * `token.Expiry`
+
+---
+
+> [!TIP]
+> In [`token.go`](file:///home/jeremy/projects/google_driver/internal/auth/token.go#L12), you have `authTokenPath = "~/.config/..."`. Keep in mind that standard Go functions like `os.ReadFile` **do not expand `~`**. Use `os.UserHomeDir()` and `filepath.Join(home, ".config", ...)` to resolve the home directory reliably across platforms.
+
+
 ---
 
 ### 4. Exchange Code for Token & Persist
