@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -31,7 +32,7 @@ func ReadTokenData() (*oauth2.Token, error) {
 	return token, nil
 }
 
-func GetAuthorization(c *oauth2.Config) error {
+func GetAuthorization(c *oauth2.Config) (authCode string, err error) {
 	authURL := c.AuthCodeURL(
 		"state-token",
 		oauth2.AccessTypeOffline,
@@ -41,5 +42,20 @@ func GetAuthorization(c *oauth2.Config) error {
 	fmt.Println("To log in, copy the URL below and paste it into your browser:")
 	fmt.Println(authURL)
 
-	return nil
+	fmt.Println("Enter your authorization code: ")
+	_, err = fmt.Scan(&authCode)
+	if err != nil {
+		return "", fmt.Errorf("unable to read authorization code: %w", err)
+	}
+
+	return
+}
+
+func GetToken(c *oauth2.Config, code string) (token *oauth2.Token, err error) {
+	token, err = c.Exchange(context.Background(), code)
+	if err != nil {
+		return nil, fmt.Errorf("unable to exchange authorization code for access token: %w", err)
+	}
+
+	return
 }

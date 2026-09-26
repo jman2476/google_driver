@@ -19,7 +19,17 @@ func main() {
 	if err != nil {
 		fmt.Printf("Token error: %v\n", err)
 
-		auth.GetAuthorization(config)
+		authCode, err := auth.GetAuthorization(config)
+		if err != nil {
+			fmt.Printf("Error getting authorization: %w", err)
+		} else {
+			token, err := auth.GetToken(config, authCode)
+			if err != nil {
+				fmt.Printf("Error getting token: %w", err)
+			} else {
+				fmt.Printf("Token pointer: %v", token)
+			}
+		}
 	} else {
 		fmt.Printf("Token: %v\n", token)
 	}
