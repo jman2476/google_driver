@@ -18,37 +18,26 @@ func LoadCredentials() (*oauth2.Config, error) {
 		)
 	}
 
-	path := filepath.Join(homeDir, authCredentialPath)
-	/* path, err := filepath.Abs("./credentials.json")
+	credentialPath := filepath.Join(homeDir, authCredentialPath)
+	data, err := os.ReadFile(credentialPath)
 	if err != nil {
-		errMsg := fmt.Errorf(
-			"could not get credential file path: %v", err,
-		)
-		return nil, errMsg
-	}*/
-
-	data, err := os.ReadFile(path)
-	if err != nil {
-		errMsg := fmt.Errorf(
-			"error reading credentials.json: %w", err,
-		)
-		return nil, errMsg
+		credentialPath = "./credentials.json"
+		data, err = os.ReadFile(credentialPath)
 	}
 
-	// TODO: add option to choose between
-	// 		drive.DriveScope -> full access
-	// 		and
-	// 		drive.DriveFileScope -> restricted access
-	config, err := google.ConfigFromJSON(
-		data, drive.DriveScope)
 	if err != nil {
-		errMsg := fmt.Errorf(
-			"error parsing credentials: %w", err,
+		return nil, fmt.Errorf(
+			"no credentials.json found\n"+
+				"To configure google-driver:\n"+
+				"1. Follow the GCP setup guide in outlines/google_cloud_platform_setup.md\n"+
+				"2. Download your credentials.json from Google Cloud Console\n"+
+				"3. Save it to: %s\n",
+			filepath.Join(homeDir, authCredentialPath),
 		)
-		return nil, errMsg
 	}
 
-	return config, nil
+	return google.ConfigFromJSON(data, drive.DriveScope)
+
 }
 
 func PrintConfig(c *oauth2.Config) {
