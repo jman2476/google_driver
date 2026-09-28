@@ -26,30 +26,62 @@ func GetAuthCode() (string, error) {
 		Handler: mux,
 	}
 
+	serverErr := make(chan error, 1)
 	go func() {
 		log.Printf("Getting auth code on port %s", port)
 		err := tokenServer.ListenAndServe()
-		log.Printf("Server finished: %v", err)
+		if err != nil && err != http.ErrServerClosed {
+			serverErr <- err
+		}
 	}()
 
-	<-ah.exitChan
-	log.Println("Received shutdown trigger")
+	select {
+	case err := <-serverErr:
+		return "", fmt.Errorf(
+			"failed to start capture server: %w", err,
+		)
+	case <-ah.exitChan:
+		log.Println("Received shutdown trigger")
+	}
+	// <-ah.exitChan
 	err := tokenServer.Shutdown(context.Background())
 	if err != nil {
 		return "", fmt.Errorf("unable to capture authorization code: %w", err)
 	}
 
-	code := ah.code
-	fmt.Printf("Authorization code captured: %s\n", code)
+	if ah.code == "" {
+		return "", fmt.Errorf("no authorization code received")
+	}
 
-	return code, err
+	return ah.code, nil
 }
 
 func (a *authHandler) handleGetCode(w http.ResponseWriter, r *http.Request) {
-	a.code = r.URL.Query().Get("code")
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
 
-	//TODO: Return JS to attempt to close window
+	if errMsg := r.URL.Query().Get("error"); errMsg != "" {
+		http.Error(
+			w,
+			"Authorization rejected: "+errMsg,
+			http.StatusBadRequest,
+		)
+	}
+
+	code := r.URL.Query().Get("code")
+	if code == "" {
+		http.Error(
+			w,
+			"Missing authorization code",
+			http.StatusBadRequest,
+		)
+	}
+
+	a.code = code
 	http.ServeFile(w, r, "./internal/auth/resources/redirect.html")
+
 	go func() {
 		a.exitChan <- struct{}{}
 	}()

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"golang.org/x/oauth2"
@@ -18,12 +18,13 @@ func main() {
 	var config apiConfig
 	err := config.setClient()
 	if err != nil {
-		fmt.Printf("Error setting client: %v\n", err)
+		log.Fatalf("Error setting client: %v\n", err)
 	}
 
 	err = config.setService()
 	if err != nil {
-		fmt.Printf("Error setting service: %v\n", err)
+		log.Fatalf("Error setting service: %v\n", err)
 	}
 
+	log.Println("Google Drive service initialized")
 }
