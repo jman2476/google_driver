@@ -95,5 +95,9 @@ func GetToken(c *oauth2.Config, code string) (token *oauth2.Token, err error) {
 	}
 
 	err = WriteTokenData(token)
+	if err != nil {
+		return token, fmt.Errorf("Error writing token data: %w", err)
+	}
+
 	return
 }
