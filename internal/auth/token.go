@@ -42,10 +42,15 @@ func GetAuthorization(c *oauth2.Config) (authCode string, err error) {
 	fmt.Println("To log in, copy the URL below and paste it into your browser:")
 	fmt.Println(authURL)
 
-	fmt.Println("Enter your authorization code: ")
-	_, err = fmt.Scan(&authCode)
+	// fmt.Println("Enter your authorization code: ")
+	// _, err = fmt.Scan(&authCode)
+	// if err != nil {
+	// 	return "", fmt.Errorf("unable to read authorization code: %w", err)
+	// }
+	fmt.Println("Getting your authorization code...")
+	authCode, err = GetAuthCode()
 	if err != nil {
-		return "", fmt.Errorf("unable to read authorization code: %w", err)
+		return "", fmt.Errorf("unable to read authorization code from server: %w", err)
 	}
 
 	return
