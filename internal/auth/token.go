@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	authTokenPath string = ".config/g-driver-portal/token.json"
+	authTokenPath      string = ".config/g-driver-portal/token.json"
+	authCredentialPath string = ".config/g-driver-portal/credentials.json"
 )
 
 func ReadTokenData() (*oauth2.Token, error) {
@@ -47,11 +48,11 @@ func WriteTokenData(token *oauth2.Token) error {
 			"unable to find user home directory: %w", err,
 		)
 	}
-	dirPath := homeDir + "/.config/g-driver-portal"
-	fmt.Printf("Directory path: %s", dirPath)
+	dirPath := filepath.Join(homeDir, authTokenPath)
+	fmt.Printf("Directory path: %s\n", dirPath)
 	err = os.MkdirAll(dirPath, 0700)
 	if err != nil {
-		return fmt.Errorf("unable to make config folder: %w\n", err)
+		return fmt.Errorf("unable to make config folder: %w", err)
 	}
 
 	data, err := json.Marshal(token)
@@ -60,7 +61,7 @@ func WriteTokenData(token *oauth2.Token) error {
 	}
 
 	filePath := dirPath + "/token.json"
-	fmt.Printf("File path: %s", filePath)
+	fmt.Printf("File path: %s\n", filePath)
 	err = os.WriteFile(filePath, data, 0600)
 	if err != nil {
 		return fmt.Errorf("unable to cache token data: %w", err)

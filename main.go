@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -27,4 +28,15 @@ func main() {
 	}
 
 	log.Println("Google Drive service initialized")
+
+	about, err := config.service.About.Get().Fields("user").Do()
+	if err != nil {
+		log.Fatalf("Drive API check failed: %v", err)
+	}
+
+	fmt.Printf(
+		"Authenticated successfully as %s (%s)\n",
+		about.User.DisplayName,
+		about.User.EmailAddress,
+	)
 }

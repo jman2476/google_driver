@@ -11,13 +11,21 @@ import (
 )
 
 func LoadCredentials() (*oauth2.Config, error) {
-	path, err := filepath.Abs("./credentials.json")
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"unable to find user home directory: %w", err,
+		)
+	}
+
+	path := filepath.Join(homeDir, authCredentialPath)
+	/* path, err := filepath.Abs("./credentials.json")
 	if err != nil {
 		errMsg := fmt.Errorf(
 			"could not get credential file path: %v", err,
 		)
 		return nil, errMsg
-	}
+	}*/
 
 	data, err := os.ReadFile(path)
 	if err != nil {
