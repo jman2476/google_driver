@@ -49,7 +49,7 @@ func (a *authHandler) handleGetCode(w http.ResponseWriter, r *http.Request) {
 	a.code = r.URL.Query().Get("code")
 
 	//TODO: Return JS to attempt to close window
-
+	http.ServeFile(w, r, "resources/codecaptured.html")
 	go func() {
 		a.exitChan <- struct{}{}
 	}()
