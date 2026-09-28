@@ -6,6 +6,8 @@ import (
 	"log"
 
 	"github.com/jman2476/google-driver/internal/auth"
+	"google.golang.org/api/drive/v3"
+	"google.golang.org/api/option"
 )
 
 func (cfg *apiConfig) setClient() error {
@@ -32,6 +34,22 @@ func (cfg *apiConfig) setClient() error {
 
 	cfg.client = config.Client(context.Background(), token)
 	cfg.token = token
+
+	return nil
+}
+
+func (cfg *apiConfig) setService() error {
+	service, err := drive.NewService(
+		context.Background(),
+		option.WithHTTPClient(cfg.client),
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"unable to start Google Drive service: %w", err,
+		)
+	}
+
+	cfg.service = service
 
 	return nil
 }
