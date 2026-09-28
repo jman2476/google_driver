@@ -29,7 +29,14 @@ func main() {
 				fmt.Printf("Error getting token: %v", err)
 			} else {
 				fmt.Printf("Token pointer: %v", token)
+				err = auth.WriteTokenData(token)
+				if err != nil {
+					fmt.Printf("Error writing token cache: %v", err)
+				} else {
+					fmt.Printf("Token cache written")
+				}
 			}
+
 		}
 	} else {
 		fmt.Printf("Token: %v\n", token)

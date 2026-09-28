@@ -17,7 +17,9 @@ const (
 func ReadTokenData() (*oauth2.Token, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return nil, fmt.Errorf("unable to find user home directory: %w", err)
+		return nil, fmt.Errorf(
+			"unable to find user home directory: %w", err,
+		)
 	}
 	absPath := filepath.Join(homeDir, authTokenPath)
 	data, err := os.ReadFile(absPath)
@@ -36,6 +38,35 @@ func ReadTokenData() (*oauth2.Token, error) {
 	}
 
 	return token, nil
+}
+
+func WriteTokenData(token *oauth2.Token) error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf(
+			"unable to find user home directory: %w", err,
+		)
+	}
+	dirPath := homeDir + "/.config/g-driver-portal"
+	fmt.Printf("Directory path: %s", dirPath)
+	err = os.MkdirAll(dirPath, 0700)
+	if err != nil {
+		return fmt.Errorf("unable to make config folder: %w\n", err)
+	}
+
+	data, err := json.Marshal(token)
+	if err != nil {
+		return fmt.Errorf("token marshalling error: %w", err)
+	}
+
+	filePath := dirPath + "/token.json"
+	fmt.Printf("File path: %s", filePath)
+	err = os.WriteFile(filePath, data, 0600)
+	if err != nil {
+		return fmt.Errorf("unable to cache token data: %w", err)
+	}
+
+	return nil
 }
 
 func GetAuthorization(c *oauth2.Config) (authCode string, err error) {
