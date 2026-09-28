@@ -68,6 +68,7 @@ func (a *authHandler) handleGetCode(w http.ResponseWriter, r *http.Request) {
 			"Authorization rejected: "+errMsg,
 			http.StatusBadRequest,
 		)
+		return
 	}
 
 	code := r.URL.Query().Get("code")
@@ -77,6 +78,7 @@ func (a *authHandler) handleGetCode(w http.ResponseWriter, r *http.Request) {
 			"Missing authorization code",
 			http.StatusBadRequest,
 		)
+		return
 	}
 
 	a.code = code

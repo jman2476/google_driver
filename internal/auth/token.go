@@ -48,8 +48,9 @@ func WriteTokenData(token *oauth2.Token) error {
 			"unable to find user home directory: %w", err,
 		)
 	}
-	dirPath := filepath.Join(homeDir, authTokenPath)
-	fmt.Printf("Directory path: %s\n", dirPath)
+	filePath := filepath.Join(homeDir, authTokenPath)
+	dirPath := filepath.Dir(filePath)
+
 	err = os.MkdirAll(dirPath, 0700)
 	if err != nil {
 		return fmt.Errorf("unable to make config folder: %w", err)
@@ -60,8 +61,6 @@ func WriteTokenData(token *oauth2.Token) error {
 		return fmt.Errorf("token marshalling error: %w", err)
 	}
 
-	filePath := dirPath + "/token.json"
-	fmt.Printf("File path: %s\n", filePath)
 	err = os.WriteFile(filePath, data, 0600)
 	if err != nil {
 		return fmt.Errorf("unable to cache token data: %w", err)
