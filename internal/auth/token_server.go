@@ -12,7 +12,7 @@ type authHandler struct {
 	exitChan chan struct{}
 }
 
-func GetAuthCode() (code string, err error) {
+func GetAuthCode() (string, error) {
 	ah := authHandler{
 		exitChan: make(chan struct{}),
 	}
@@ -28,21 +28,21 @@ func GetAuthCode() (code string, err error) {
 
 	go func() {
 		log.Printf("Getting auth code on port %s", port)
-		err = tokenServer.ListenAndServe()
+		err := tokenServer.ListenAndServe()
 		log.Printf("Server finished: %v", err)
 	}()
 
 	<-ah.exitChan
 	log.Println("Received shutdown trigger")
-	err = tokenServer.Shutdown(context.Background())
+	err := tokenServer.Shutdown(context.Background())
 	if err != nil {
 		return "", fmt.Errorf("unable to capture authorization code: %w", err)
 	}
 
-	code = ah.code
+	code := ah.code
 	fmt.Printf("Authorization code captured: %s\n", code)
 
-	return
+	return code, err
 }
 
 func (a *authHandler) handleGetCode(w http.ResponseWriter, r *http.Request) {
