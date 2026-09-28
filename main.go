@@ -2,44 +2,23 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"net/http"
 
-	"github.com/jman2476/google-driver/internal/auth"
+	"golang.org/x/oauth2"
 )
 
+type apiConfig struct {
+	client *http.Client
+	token  *oauth2.Token
+}
+
 func main() {
-	log.Println("Starting Google Driver")
-	config, err := auth.LoadCredentials()
+	var config apiConfig
+	err := config.setClient()
 	if err != nil {
-		fmt.Printf("Error loading credentials: %v", err)
-	}
-
-	auth.PrintConfig(config)
-
-	token, err := auth.ReadTokenData()
-	if err != nil {
-		fmt.Printf("Token error: %v\n", err)
-
-		authCode, err := auth.GetAuthorization(config)
-		if err != nil {
-			fmt.Printf("Error getting authorization: %v", err)
-		} else {
-			token, err := auth.GetToken(config, authCode)
-			if err != nil {
-				fmt.Printf("Error getting token: %v", err)
-			} else {
-				fmt.Printf("Token pointer: %v", token)
-				err = auth.WriteTokenData(token)
-				if err != nil {
-					fmt.Printf("Error writing token cache: %v", err)
-				} else {
-					fmt.Printf("Token cache written")
-				}
-			}
-
-		}
+		fmt.Printf("Error setting client: %v\n", err)
 	} else {
-		fmt.Printf("Token: %v\n", token)
+		fmt.Printf("Client set: %v\n", config)
 	}
 
 }

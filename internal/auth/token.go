@@ -79,11 +79,6 @@ func GetAuthorization(c *oauth2.Config) (authCode string, err error) {
 	fmt.Println("To log in, copy the URL below and paste it into your browser:")
 	fmt.Println(authURL)
 
-	// fmt.Println("Enter your authorization code: ")
-	// _, err = fmt.Scan(&authCode)
-	// if err != nil {
-	// 	return "", fmt.Errorf("unable to read authorization code: %w", err)
-	// }
 	fmt.Println("Getting your authorization code...")
 	authCode, err = GetAuthCode()
 	if err != nil {
@@ -99,7 +94,6 @@ func GetToken(c *oauth2.Config, code string) (token *oauth2.Token, err error) {
 		return nil, fmt.Errorf("unable to exchange authorization code for access token: %w", err)
 	}
 
+	err = WriteTokenData(token)
 	return
 }
-
-// TODO: add server that spins up to capture the code query parameter
