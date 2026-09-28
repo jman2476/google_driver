@@ -5,16 +5,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/oauth2"
 )
 
 const (
-	authTokenPath string = "~/.config/g-driver-portal/token.json"
+	authTokenPath string = ".config/g-driver-portal/token.json"
 )
 
 func ReadTokenData() (*oauth2.Token, error) {
-	data, err := os.ReadFile(authTokenPath)
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return nil, fmt.Errorf("unable to find user home directory: %w", err)
+	}
+	absPath := filepath.Join(homeDir, authTokenPath)
+	data, err := os.ReadFile(absPath)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"unable to read auth token: %w", err,
