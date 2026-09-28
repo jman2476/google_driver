@@ -18,7 +18,7 @@ func GetAuthCode() (code string, err error) {
 	port := "8080"
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("*", ah.handleGetCode)
+	mux.HandleFunc("/", ah.handleGetCode)
 
 	tokenServer := &http.Server{
 		Addr:    ":" + port,
