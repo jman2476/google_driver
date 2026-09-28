@@ -27,7 +27,8 @@ func GetAuthCode() (code string, err error) {
 
 	go func() {
 		log.Printf("Getting auth code on port %s", port)
-		log.Fatal(tokenServer.ListenAndServe())
+		err = tokenServer.ListenAndServe()
+		log.Printf("Server finished: %v", err)
 	}()
 
 	<-ah.exitChan
