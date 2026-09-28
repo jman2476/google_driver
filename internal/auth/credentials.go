@@ -36,7 +36,7 @@ func LoadCredentials() (*oauth2.Config, error) {
 		)
 	}
 
-	return google.ConfigFromJSON(data, drive.DriveScope)
+	return google.ConfigFromJSON(data, drive.DriveFileScope)
 
 }
 
