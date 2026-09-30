@@ -2,6 +2,7 @@ package main
 
 import (
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -107,10 +108,83 @@ func TestFindFile(t *testing.T) {
 }
 
 func TestValidateFile(t *testing.T) {
+	currentDir, err := filepath.Abs(".")
+	if err != nil {
+		t.Errorf("Error: cannot get working directory: %v", err)
+		return
+	}
+
 	cases := []struct {
 		path          string
 		expectAbsPath string
 		expectName    string
 		expectMime    string
-	}{}
+	}{
+		{
+			path: "./test_resources/bubbletea_gui.gif",
+			expectAbsPath: filepath.Join(
+				currentDir, "./test_resources/bubbletea_gui.gif",
+			),
+			expectName: "bubbletea_gui.gif",
+			expectMime: "image/gif",
+		}, {
+			path: "./test_resources/chess.mov",
+			expectAbsPath: filepath.Join(
+				currentDir, "./test_resources/chess.mov",
+			),
+			expectName: "chess.mov",
+			expectMime: "video/quicktime",
+		}, {
+			path: "./test_resources/OrionNebulaCenterMonitor.png",
+			expectAbsPath: filepath.Join(
+				currentDir,
+				"./test_resources/OrionNebulaCenterMonitor.png",
+			),
+			expectName: "OrionNebulaCenterMonitor.png",
+			expectMime: "image/png",
+		}, {
+			path: "./test_resources/goose_sqlc-instructions.txt",
+			expectAbsPath: filepath.Join(
+				currentDir,
+				"./test_resources/goose_sqlc-instructions.txt",
+			),
+			expectName: "goose_sqlc-instructions.txt",
+			expectMime: "text/plain",
+		},
+	}
+
+	for _, c := range cases {
+		fileData, err := ValidateFile(c.path)
+		if err != nil {
+			t.Errorf("Fail: unable to validate file: %v", err)
+		}
+
+		if fileData.Info.Name() != c.expectName {
+			t.Errorf(
+				"Fail: name mismatch\nExpected: %v\nActual: %v",
+				c.expectName, fileData.Info.Name(),
+			)
+		}
+
+		if strings.Split(fileData.Mime, ";")[0] != c.expectMime {
+			t.Errorf(
+				"Fail: mime type mismatch\nExpected: %v\nActual: %v",
+				c.expectMime, fileData.Mime,
+			)
+		}
+
+		if fileData.AbsPath != c.expectAbsPath {
+			t.Errorf(
+				"Fail: absolute path mismatch\nExpected: %v\nActual: %v",
+				c.expectAbsPath, fileData.AbsPath,
+			)
+		}
+
+		if len(fileData.Data) != int(fileData.Info.Size()) {
+			t.Errorf(
+				"Fail: size mismatch\nExpected: %v [.Size()]\nActual: %v [len(Data)]",
+				int(fileData.Info.Size()), len(fileData.Data),
+			)
+		}
+	}
 }
