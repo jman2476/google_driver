@@ -180,6 +180,9 @@ func TestValidateFile(t *testing.T) {
 			)
 		}
 
+		t.Logf("Size of file: %d bytes\n", int(fileData.Info.Size()))
+		t.Logf("Len of data slice: %d \n", len(fileData.Data))
+
 		if len(fileData.Data) != int(fileData.Info.Size()) {
 			t.Errorf(
 				"Fail: size mismatch\nExpected: %v [.Size()]\nActual: %v [len(Data)]",
