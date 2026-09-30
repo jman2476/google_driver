@@ -39,12 +39,12 @@ func TestFindFile(t *testing.T) {
 			expectedFileName: "goose_sqlc-instructions.md",
 			exists:           false,
 		}, {
-			inputPath: "./test_resources/gui_example.mov",
+			inputPath: "./test_resources/bubbletea_gui.gif",
 			expectedPath: filepath.Join(
 				currentDir,
-				"./test_resources/gui_example.mov",
+				"./test_resources/bubbletea_gui.gif",
 			),
-			expectedFileName: "gui_example.mov",
+			expectedFileName: "bubbletea_gui.gif",
 			exists:           true,
 		}, {
 			inputPath: "./test_resources/T-Rex_training.cpp",
