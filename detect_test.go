@@ -105,3 +105,12 @@ func TestFindFile(t *testing.T) {
 		}
 	}
 }
+
+func TestValidateFile(t *testing.T) {
+	cases := []struct {
+		path          string
+		expectAbsPath string
+		expectName    string
+		expectMime    string
+	}{}
+}
