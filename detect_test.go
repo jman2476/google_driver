@@ -70,6 +70,14 @@ func TestFindFile(t *testing.T) {
 			),
 			expectedFileName: "goose_sqlc_instructions.txt",
 			exists:           false,
+		}, {
+			inputPath: "./test_resources/chess.mov",
+			expectedPath: filepath.Join(
+				currentDir,
+				"./test_resources/chess.mov",
+			),
+			expectedFileName: "chess.mov",
+			exists:           true,
 		},
 	}
 
