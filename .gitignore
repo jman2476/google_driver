@@ -35,3 +35,6 @@ go.work.sum
 credentials.json
 token.json
 *.token
+
+# Large testing files
+test_resources/gui_example.mov

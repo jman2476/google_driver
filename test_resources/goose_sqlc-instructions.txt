@@ -1,0 +1,67 @@
+# install goose and sqlc (requires Go toolchain)
+go install github.com/pressly/goose/v3/cmd/goose@latest
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+## IF NEW INSTALLATION ##
+in shell config (.bashrc, .zshrc): 
+if no path variable-> export PATH=/usr/bin:/usr/local/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+# make sure you have PSQL driver for Go:
+go get github.com/lib/pq
+
+import at top of main.go: 
+import _ "github.com/lib/pq"
+
+# And you will likely need the UUID package: 
+go get github.com/google/uuid
+
+# Setup a ./sql directory with two subdirectories
+./sql/schema -> named 'number_name.sql', will contain an up migration and down migration. each new table or new field in a table requires a new migration file
+	example: 001_users.sql -> contains CREATE TABLE users();
+				  contains DROP TABLE users;
+./sql/queries -> named after table it interacts with, e.g. 'users.sql'
+		contains the queries you want to have generated into Go code
+
+# Migration files -> ./sql/schema files
+001_users:
+-- +goose Up
+CREATE TABLE users(...);
+
+-- +goose Down
+DROP TABLE users;
+
+!!! Comments are how Goose knows what migration to perform, always include both before running migration !!!
+## Running migration:
+```bash
+goose postgres "[connection string to database]" up
+goose postgres "[connection string to database]" down
+```
+
+# Query files -> ./sql/queries files
+queries.sql:
+-- name: CreateUser :one
+INSERT INTO users (id, created_at, updated_at)
+VALUES ($1, $2, $3)
+RETURNING *;
+
+!!! Again, comments tell sqlc what to generate, what to name the functions !!!
+## Generating ./internal/database files:
+** First need sqlc.yaml in root of project **
+sqlc.yaml example: 
+version: "2"
+sql:
+  - schema: "sql/schema"
+    queries: "sql/queries"
+    engine: "postgresql"
+    gen:
+      go:
+        out: "internal/database"
+
+then, in shell:
+```bash
+sqlc generate
+```
+
+
