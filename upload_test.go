@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"testing"
 
 	"google.golang.org/api/drive/v3"
@@ -67,6 +68,42 @@ func TestWriteUploadMetadata(t *testing.T) {
 				c.expected.Parents[0],
 				filePointer.Parents[0],
 			)
+		}
+	}
+}
+
+func TestUploadFile(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	cases := []struct {
+		path   string
+		target string
+	}{
+		{
+			path:   "./test_resources/bubbletea_gui.gif",
+			target: "",
+		}, {
+			path:   "./test_resources/goose_sqlc-instructions.txt",
+			target: "",
+		},
+	}
+
+	for _, c := range cases {
+		err = UploadFile(
+			config.service.Files,
+			c.path, c.target,
+		)
+		if err != nil {
+			t.Errorf("Fail: error creating file on drive: %v", err)
 		}
 	}
 }
