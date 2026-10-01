@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"mime"
 	"os"
@@ -13,7 +14,7 @@ type FileData struct {
 	Info    os.FileInfo
 	Mime    string
 	Data    []byte
-	Reader  *FileReader
+	Reader  *bytes.Reader
 }
 
 func FindFile(path string) (string, os.FileInfo, error) {
@@ -56,10 +57,7 @@ func ValidateFile(path string) (file FileData, err error) {
 	mimeType := mime.TypeByExtension(extension)
 
 	file.Mime = mimeType
-	file.Reader = &FileReader{
-		maxBytes:  int(file.Info.Size()),
-		readSoFar: 0,
-	}
+	file.Reader = bytes.NewReader(file.Data)
 
 	return
 }
