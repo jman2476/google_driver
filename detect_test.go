@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -190,4 +191,46 @@ func TestValidateFile(t *testing.T) {
 			)
 		}
 	}
+}
+
+func TestValidateUnreadableFile(t *testing.T) {
+	// If root, skip test
+	if os.Geteuid() == 0 {
+		t.Skip("Skipping permission test, running as root")
+	}
+
+	tempDir := t.TempDir()
+	unreadablePath := filepath.Join(
+		tempDir, "unreadable.txt")
+
+	err := os.WriteFile(
+		unreadablePath,
+		[]byte("Testing text for texty testing"),
+		0600,
+	)
+	if err != nil {
+		t.Fatalf(
+			"Failed to create temp test file: %v", err)
+	}
+
+	err = os.Chmod(unreadablePath, 0000)
+	if err != nil {
+		t.Fatalf(
+			"Failed to set file permissions to unreadable: %v",
+			err,
+		)
+	}
+
+	t.Cleanup(func() {
+		_ = os.Chmod(unreadablePath, 0600)
+	})
+
+	fileData, err := ValidateFile(unreadablePath)
+	if err == nil {
+		t.Errorf(
+			"Fail: Validate file returned nil error on the unreadable file: %v",
+			fileData,
+		)
+	}
+
 }
