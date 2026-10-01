@@ -1,5 +1,6 @@
 package auth
 
+// Depricated
 type Credentials struct {
 	Installed struct {
 		ClientID     string   `json:"client_id"`
