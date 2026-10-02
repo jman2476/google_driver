@@ -53,7 +53,8 @@ func FindFolder(path string) (*drive.File, error) {
 	folders := strings.Split(path, "/")
 
 	fmt.Printf("folders: %s", folders)
-	fmt.Printf("Drive MIME type: %s", driveFolderMIME)
+	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
+	fmt.Printf("Drive MIME type: %s", searchQuery)
 
 	return nil, nil
 }
