@@ -48,13 +48,20 @@ func ParsePath(folderPath string) ([]DriveFolder, error) {
 	return parsedFolders, nil
 }
 
-func FindFolder(path string) (*drive.File, error) {
+func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	// Start assuming only search depth of one
 	folders := strings.Split(path, "/")
 
 	fmt.Printf("folders: %s", folders)
 	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
 	fmt.Printf("Drive MIME type: %s", searchQuery)
+
+	folderList, err := cfg.service.Files.List().Q(searchQuery).Do()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"FindFolder error: %w", err,
+		)
+	}
 
 	return nil, nil
 }
