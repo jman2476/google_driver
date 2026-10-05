@@ -23,6 +23,12 @@ type DriveFolder struct {
 	Parent string
 }
 
+func printDriveFolder(folders []DriveFolder) {
+	for _, f := range folders {
+		fmt.Printf("Name: %v, Parent: %v\n", f.Name, f.Parent)
+	}
+}
+
 func ParsePath(folderPath string) ([]DriveFolder, error) {
 	folders := strings.Split(folderPath, "/")
 
@@ -57,6 +63,8 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 		)
 	}
 
+	printDriveFolder(folders)
+
 	fmt.Printf("folders: %v", folders)
 	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
 	fmt.Printf("Drive MIME type: %s", searchQuery)
@@ -68,17 +76,21 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 		)
 	}
 
+	for _, f := range folderList.Files {
+		fmt.Printf("Folder name: %v ID: %v  Parent: %v", f.Name, f.Id, f.Parents[0])
+	}
+
 	var tracker = struct {
 		ParentID    string
 		ParentName  string
 		CurrentFile *drive.File
 	}{}
 	for _, folder := range folders {
+		fmt.Printf("Checking for folder: %s\n", folder.Name)
 		for _, f := range folderList.Files {
 			fmt.Printf("Folder: %s\n", f.Name)
 			if folder.Name == f.Name {
-				if folder.Parent == "" &&
-					len(f.Parents) == 0 {
+				if folder.Parent == "" {
 					tracker.CurrentFile = f
 					break
 				} else if folder.Parent == f.Parents[0] {
@@ -89,6 +101,10 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 				}
 			}
 		}
+	}
+
+	if tracker.CurrentFile == nil {
+		return nil, fmt.Errorf("No folder found")
 	}
 
 	return tracker.CurrentFile, nil

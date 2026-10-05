@@ -87,9 +87,12 @@ func TestFindFolder(t *testing.T) {
 		log.Fatalf("Error setting service: %v\n", err)
 	}
 
-	cases := "/google-driver_testing"
+	cases := "google-driver_testing"
 
 	folder, err := config.FindFolder(cases)
+	if err != nil {
+		t.Logf("Fail: TFF error: %v", err)
+	}
 
 	fmt.Printf("Folder: %s", folder.Name)
 }
