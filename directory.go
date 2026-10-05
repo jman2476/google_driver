@@ -50,9 +50,14 @@ func ParsePath(folderPath string) ([]DriveFolder, error) {
 
 func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	// Start assuming only search depth of one
-	folders := strings.Split(path, "/")
+	folders, err := ParsePath(path)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"Find folder: path error: %v", err,
+		)
+	}
 
-	fmt.Printf("folders: %s", folders)
+	fmt.Printf("folders: %v", folders)
 	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
 	fmt.Printf("Drive MIME type: %s", searchQuery)
 
@@ -61,6 +66,24 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 		return nil, fmt.Errorf(
 			"FindFolder error: %w", err,
 		)
+	}
+
+	var tracker = struct {
+		ParentID    string
+		ParentName  string
+		CurrentFile *drive.File
+	}{}
+	for _, folder := range folders {
+		for _, f := range folderList.Files {
+			if folder.Name == f.Name {
+				if folder.Parent == "" &&
+					len(f.Parents) == 0 {
+					tracker.CurrentFile = f
+				} else if folder.Parent == f.Parents[0] {
+
+				}
+			}
+		}
 	}
 
 	return nil, nil
