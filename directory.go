@@ -79,14 +79,18 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 				if folder.Parent == "" &&
 					len(f.Parents) == 0 {
 					tracker.CurrentFile = f
+					break
 				} else if folder.Parent == f.Parents[0] {
-
+					tracker.ParentName = tracker.CurrentFile.Name
+					tracker.CurrentFile = f
+					tracker.ParentID = f.Parents[0]
+					break
 				}
 			}
 		}
 	}
 
-	return nil, nil
+	return tracker.CurrentFile, nil
 }
 
 func CreateFolder(path string) (*drive.File, error) {
