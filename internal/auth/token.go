@@ -94,6 +94,10 @@ func GetToken(c *oauth2.Config, code string) (token *oauth2.Token, err error) {
 		return nil, fmt.Errorf("unable to exchange authorization code for access token: %w", err)
 	}
 
+	if len(token.RefreshToken) == 0 {
+		return token, fmt.Errorf("token struct missing refresh token")
+	}
+
 	err = WriteTokenData(token)
 	if err != nil {
 		return token, fmt.Errorf("Error writing token data: %w", err)
