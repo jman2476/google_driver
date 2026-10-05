@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"log"
+	"testing"
+)
 
 func TestParsePath(t *testing.T) {
 	cases := []struct {
@@ -72,7 +76,22 @@ func TestParsePath(t *testing.T) {
 }
 
 func TestFindFolder(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
 
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	cases := "/google-driver_testing"
+
+	folder, err := config.FindFolder(cases)
+
+	fmt.Printf("Folder: %s", folder.Name)
 }
 
 func TestCreateFolder(t *testing.T) {

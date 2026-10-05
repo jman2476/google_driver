@@ -75,6 +75,7 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	}{}
 	for _, folder := range folders {
 		for _, f := range folderList.Files {
+			fmt.Printf("Folder: %s\n", f.Name)
 			if folder.Name == f.Name {
 				if folder.Parent == "" &&
 					len(f.Parents) == 0 {
