@@ -98,10 +98,7 @@ func TestUploadFile(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		err = UploadFile(
-			config.service.Files,
-			c.path, c.target,
-		)
+		err = config.UploadFile(c.path, c.target)
 		if err != nil {
 			t.Errorf("Fail: error creating file on drive: %v", err)
 		}

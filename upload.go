@@ -19,7 +19,7 @@ func WriteUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
 	return meta
 }
 
-func UploadFile(fs *drive.FilesService, path string, targetDir string) error {
+func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 	fileData, err := ValidateFile(path)
 	if err != nil {
 		return fmt.Errorf(
@@ -29,7 +29,7 @@ func UploadFile(fs *drive.FilesService, path string, targetDir string) error {
 	}
 
 	metadata := WriteUploadMetadata(fileData, targetDir)
-	uploadBuilder := fs.Create(metadata)
+	uploadBuilder := cfg.service.Files.Create(metadata)
 	uploadBuilder.Media(fileData.Reader)
 
 	// TODO:
@@ -39,6 +39,13 @@ func UploadFile(fs *drive.FilesService, path string, targetDir string) error {
 	// 		  with MIME type application/vnd.google-apps.folder
 	// - Maybe prompt user that the selected folder doesn't exist?
 	// - if all is good, upload
+
+	err = cfg.validateToken()
+	if err != nil {
+		return fmt.Errorf(
+			"upload file: token validation error: %w", err,
+		)
+	}
 
 	response, err := uploadBuilder.Fields("id", "name").Do()
 	if err != nil {
