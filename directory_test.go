@@ -87,7 +87,7 @@ func TestFindFolder(t *testing.T) {
 		log.Fatalf("Error setting service: %v\n", err)
 	}
 
-	cases := "google-driver_testing"
+	cases := "test_folder"
 
 	folder, err := config.FindFolder(cases)
 	if err != nil {
@@ -98,7 +98,22 @@ func TestFindFolder(t *testing.T) {
 }
 
 func TestCreateFolder(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		t.Errorf("error setting client: %v\n", err)
+	}
 
+	err = config.setService()
+	if err != nil {
+		t.Errorf("error setting service: %v\n", err)
+	}
+
+	path := "test_folder"
+	err = config.CreateFolder(path)
+	if err != nil {
+		t.Errorf("Fail: error creating folder on drive: %v", err)
+	}
 }
 
 func TestDeleteFolder(t *testing.T) {

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"google.golang.org/api/drive/v3"
+	"google.golang.org/api/googleapi"
 )
 
 const (
@@ -68,6 +69,7 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	fmt.Printf("folders: %v", folders)
 	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
 	fmt.Printf("Drive MIME type: %s", searchQuery)
+	var fields googleapi.Field = "files(id, name, parents)"
 
 	err = cfg.validateToken()
 	if err != nil {
@@ -76,7 +78,7 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 		)
 	}
 
-	folderList, err := cfg.service.Files.List().Q(searchQuery).Do()
+	folderList, err := cfg.service.Files.List().Q(searchQuery).Fields(fields).Do()
 	if err != nil {
 		return nil, fmt.Errorf(
 			"FindFolder error: %w", err,
@@ -111,14 +113,44 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	}
 
 	if tracker.CurrentFile == nil {
-		return nil, fmt.Errorf("No folder found")
+		return nil, ErrDirNotFound
 	}
 
 	return tracker.CurrentFile, nil
 }
 
-func CreateFolder(path string) (*drive.File, error) {
-	return nil, nil
+func (cfg *apiConfig) CreateFolder(path string) error {
+	folders, err := ParsePath(path)
+	if err != nil {
+		return fmt.Errorf(
+			"Create folder: path error: %w", err,
+		)
+	}
+
+	metadata := &drive.File{
+		Name:     folders[len(folders)-1].Name,
+		MimeType: driveFolderMIME,
+	}
+	uploadBuilder := cfg.service.Files.Create(metadata)
+
+	err = cfg.validateToken()
+	if err != nil {
+		return fmt.Errorf(
+			"create folder: token validation error: %w", err,
+		)
+	}
+
+	response, err := uploadBuilder.Fields("id", "name").Do()
+	if err != nil {
+		fmt.Printf("Response failure: %v", response)
+
+		return fmt.Errorf(
+			"create file error: %w", err,
+		)
+	}
+
+	fmt.Printf("Response success: %v", response)
+	return nil
 }
 
 func DeleteFolder(path string) (*drive.File, error) {
