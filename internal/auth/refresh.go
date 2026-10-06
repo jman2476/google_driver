@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -13,19 +14,37 @@ var (
 	errTokenNearExpiry = errors.New("token expires soon")
 )
 
-func checkTokenAge(t *oauth2.Token) error {
+func NeedRefresh(token *oauth2.Token, buffer time.Duration) bool {
 
-	if !t.Expiry.After(time.Now()) {
-		return errTokenExpired
+	if token == nil || !token.Valid() {
+		return true
 	}
 
-	dayDuration, err := time.ParseDuration("24h")
+	return time.Until(token.Expiry) <= buffer
+}
+
+func RefreshToken(config *oauth2.Config, token *oauth2.Token) (*oauth2.Token, error) {
+	tokenSource := config.TokenSource(context.Background(), token)
+
+	newToken, err := tokenSource.Token()
 	if err != nil {
-		return fmt.Errorf("duration parse error: %v", err)
-	}
-	if time.Until(t.Expiry) <= dayDuration {
-		return errTokenNearExpiry
+		return nil, fmt.Errorf("failed to refresh token: %w", err)
 	}
 
-	return nil
+	return newToken, nil
+}
+
+func EnsureValidToken(config *oauth2.Config, token *oauth2.Token) (*oauth2.Token, bool, error) {
+	if !NeedRefresh(token, 5*time.Minute) {
+		return token, false, nil
+	}
+
+	newToken, err := RefreshToken(config, token)
+	if err != nil {
+		return nil, false, err
+	}
+
+	wasRefreshed := newToken.AccessToken != token.AccessToken
+
+	return newToken, wasRefreshed, nil
 }

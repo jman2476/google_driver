@@ -53,3 +53,26 @@ func (cfg *apiConfig) setService() error {
 
 	return nil
 }
+
+func (cfg *apiConfig) validateToken() error {
+	config, err := auth.LoadCredentials()
+	if err != nil {
+		return fmt.Errorf("error loading credentials: %w\n", err)
+	}
+
+	newToken, isRefresh, err := auth.EnsureValidToken(config, cfg.token)
+	if err != nil {
+		return fmt.Errorf("token validation error: %w\n", err)
+	}
+
+	if isRefresh {
+		err = auth.WriteTokenData(newToken)
+		if err != nil {
+			return fmt.Errorf("unable to save new valid token: %w", err)
+		}
+
+		cfg.token = newToken
+	}
+
+	return nil
+}
