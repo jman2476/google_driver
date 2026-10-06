@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	errTokenExpired = errors.New("")
+	errTokenExpired = errors.New("token has expired")
 )
 
 func checkTokenAge(t *oauth2.Token) error {
 
-	if t.Expiry.Compare(time.Now()) >= 0 {
+	if t.Expiry.Compare(time.Now()) <= 0 {
 		return errTokenExpired
 	}
 
