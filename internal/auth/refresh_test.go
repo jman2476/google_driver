@@ -21,13 +21,16 @@ func TestCheckTokenAge(t *testing.T) {
 	}{
 		{
 			input:         oauth2.Token{Expiry: currentTime.Add(dayDuration)},
-			expectedError: nil,
+			expectedError: errTokenNearExpiry,
 		}, {
 			input:         oauth2.Token{Expiry: currentTime.Add(-dayDuration)},
 			expectedError: errTokenExpired,
 		}, {
 			input:         oauth2.Token{Expiry: currentTime},
 			expectedError: errTokenExpired,
+		}, {
+			input:         oauth2.Token{Expiry: currentTime.Add(dayDuration).Add(dayDuration)},
+			expectedError: nil,
 		},
 	}
 
