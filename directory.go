@@ -69,6 +69,13 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
 	fmt.Printf("Drive MIME type: %s", searchQuery)
 
+	err = cfg.validateToken()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"unable to validate token: %w", err,
+		)
+	}
+
 	folderList, err := cfg.service.Files.List().Q(searchQuery).Do()
 	if err != nil {
 		return nil, fmt.Errorf(

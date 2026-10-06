@@ -76,3 +76,7 @@ func (cfg *apiConfig) validateToken() error {
 
 	return nil
 }
+
+func (cfg *apiConfig) eraseTokenCache() error {
+	return auth.DeleteTokenData()
+}

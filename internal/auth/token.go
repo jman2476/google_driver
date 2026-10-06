@@ -69,6 +69,30 @@ func WriteTokenData(token *oauth2.Token) error {
 	return nil
 }
 
+func DeleteTokenData() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf(
+			"unable to find user home directory: %w", err,
+		)
+	}
+	filePath := filepath.Join(homeDir, authTokenPath)
+
+	_, err = os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("unable to find token cache: %w", err)
+	}
+
+	err = os.WriteFile(filePath, []byte{}, 0600)
+	if err != nil {
+		return fmt.Errorf(
+			"unable to overwrite/clear token data: %w", err,
+		)
+	}
+
+	return nil
+}
+
 func GetAuthorization(c *oauth2.Config) (authCode string, err error) {
 	authURL := c.AuthCodeURL(
 		"state-token",
