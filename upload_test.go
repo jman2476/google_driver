@@ -45,7 +45,7 @@ func TestWriteUploadMetadata(t *testing.T) {
 			t.Errorf("Fail: unable to validate file: %v\n", err)
 		}
 
-		filePointer := WriteUploadMetadata(fileData, c.targetFolder)
+		filePointer := writeUploadMetadata(fileData, c.targetFolder)
 
 		if filePointer.Name != c.expected.Name {
 			t.Errorf(
@@ -100,7 +100,7 @@ func TestUploadFile(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		err = config.UploadFile(c.path, c.target)
+		_, err = config.uploadFile(c.path, c.target)
 		if err != nil {
 			t.Errorf("Fail: error creating file on drive: %v", err)
 		}

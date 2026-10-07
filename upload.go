@@ -6,7 +6,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func WriteUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
+func writeUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
 	meta := &drive.File{
 		Name:     fileData.Info.Name(),
 		MimeType: fileData.Mime,
@@ -19,10 +19,10 @@ func WriteUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
 	return meta
 }
 
-func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
+func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, error) {
 	fileData, err := ValidateFile(path)
 	if err != nil {
-		return fmt.Errorf(
+		return nil, fmt.Errorf(
 			"failed to validate file: %v\n",
 			err,
 		)
@@ -31,7 +31,7 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 
 	target, err := cfg.FindFolder(targetDir)
 	if err != nil && err != ErrEmptyDir {
-		return fmt.Errorf(
+		return nil, fmt.Errorf(
 			"failed to find target folder: %w\n", err,
 		)
 	}
@@ -39,7 +39,7 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 		targetId = target.Id
 	}
 
-	metadata := WriteUploadMetadata(fileData, targetId)
+	metadata := writeUploadMetadata(fileData, targetId)
 	uploadBuilder := cfg.service.Files.Create(metadata)
 	uploadBuilder.Media(fileData.Reader)
 
@@ -53,7 +53,7 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 
 	err = cfg.validateToken()
 	if err != nil {
-		return fmt.Errorf(
+		return nil, fmt.Errorf(
 			"upload file: token validation error: %w\n", err,
 		)
 	}
@@ -62,12 +62,12 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 	if err != nil {
 		fmt.Printf("Response failure: %v\n", response)
 
-		return fmt.Errorf(
+		return nil, fmt.Errorf(
 			"upload file error: %w\n", err,
 		)
 	}
 
 	fmt.Printf("Response success: %v\n", response)
 
-	return nil
+	return response, nil
 }

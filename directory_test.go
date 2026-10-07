@@ -115,7 +115,7 @@ func TestCreateFolder(t *testing.T) {
 		"test_folder/child_test_folder-%d:%d",
 		current_time.Hour(), current_time.Minute(),
 	)
-	folder, err := config.CreateFolder(path)
+	folder, err := config.createFolder(path, "")
 	if err != nil {
 		t.Errorf("Fail: error creating folder on drive: %v\n", err)
 	}
