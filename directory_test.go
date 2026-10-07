@@ -109,11 +109,16 @@ func TestCreateFolder(t *testing.T) {
 		t.Errorf("error setting service: %v\n", err)
 	}
 
-	path := "test_folder"
-	err = config.CreateFolder(path)
+	path := "test_folder/child_test_folder"
+	folder, err := config.CreateFolder(path)
 	if err != nil {
 		t.Errorf("Fail: error creating folder on drive: %v", err)
 	}
+
+	t.Logf(
+		"Created folder %v\nParent: %v\nID: %v\n",
+		folder.Name, folder.Parents, folder.Id,
+	)
 }
 
 func TestDeleteFolder(t *testing.T) {
