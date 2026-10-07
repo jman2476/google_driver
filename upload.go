@@ -29,7 +29,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 	}
 	targetId := "root"
 
-	target, err := cfg.FindFolder(targetDir)
+	target, err := cfg.findFolder(targetDir)
 	if err != nil && err != ErrEmptyDir {
 		return nil, fmt.Errorf(
 			"failed to find target folder: %w\n", err,

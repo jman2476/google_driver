@@ -90,7 +90,7 @@ func TestFindFolder(t *testing.T) {
 
 	cases := "test_folder"
 
-	folder, err := config.FindFolder(cases)
+	folder, err := config.findFolder(cases)
 	if err != nil {
 		t.Fatalf("Fail: TFF error: %v\n", err)
 	}

@@ -54,7 +54,7 @@ func ParsePath(folderPath string) ([]DriveFolder, error) {
 	return parsedFolders, nil
 }
 
-func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
+func (cfg *apiConfig) findFolder(path string) (*drive.File, error) {
 	// Start assuming only search depth of one
 	folders, err := ParsePath(path)
 	if err != nil {
@@ -131,7 +131,7 @@ func (cfg *apiConfig) createFolder(path string, _ string) (*drive.File, error) {
 
 		parentPath := strings.Join(pathSlice, "/")
 
-		parent, err := cfg.FindFolder(parentPath)
+		parent, err := cfg.findFolder(parentPath)
 		if err != nil {
 			return nil, fmt.Errorf(
 				"parent of folder to create not found at %s: %w",
