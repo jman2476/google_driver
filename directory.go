@@ -58,6 +58,9 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	// Start assuming only search depth of one
 	folders, err := ParsePath(path)
 	if err != nil {
+		if err == ErrEmptyDir {
+			return nil, err
+		}
 		return nil, fmt.Errorf(
 			"Find folder: path error: %v", err,
 		)
@@ -156,7 +159,7 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 
 func (cfg *apiConfig) CreateFolder(path string) (*drive.File, error) {
 	folders, err := ParsePath(path)
-	if err != nil {
+	if err != nil && err != ErrEmptyDir {
 		return nil, fmt.Errorf(
 			"Create folder: path error: %w", err,
 		)
@@ -202,14 +205,14 @@ func (cfg *apiConfig) CreateFolder(path string) (*drive.File, error) {
 
 	folderResp, err := uploadBuilder.Fields("id", "name").Do()
 	if err != nil {
-		fmt.Printf("Response failure: %v", folderResp)
+		fmt.Printf("Response failure: %v\n", folderResp)
 
 		return nil, fmt.Errorf(
 			"create file error: %w", err,
 		)
 	}
 
-	fmt.Printf("Response success: %v", folderResp)
+	fmt.Printf("Response success: %v\n", folderResp)
 	return folderResp, nil
 }
 

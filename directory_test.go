@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 )
 
 func TestParsePath(t *testing.T) {
@@ -91,10 +92,10 @@ func TestFindFolder(t *testing.T) {
 
 	folder, err := config.FindFolder(cases)
 	if err != nil {
-		t.Logf("Fail: TFF error: %v", err)
+		t.Logf("Fail: TFF error: %v\n", err)
 	}
 
-	fmt.Printf("Folder: %s", folder.Name)
+	fmt.Printf("Folder: %s\n", folder.Name)
 }
 
 func TestCreateFolder(t *testing.T) {
@@ -109,10 +110,14 @@ func TestCreateFolder(t *testing.T) {
 		t.Errorf("error setting service: %v\n", err)
 	}
 
-	path := "test_folder/child_test_folder"
+	current_time := time.Now()
+	path := fmt.Sprintf(
+		"test_folder/child_test_folder-%d:%d",
+		current_time.Hour(), current_time.Minute(),
+	)
 	folder, err := config.CreateFolder(path)
 	if err != nil {
-		t.Errorf("Fail: error creating folder on drive: %v", err)
+		t.Errorf("Fail: error creating folder on drive: %v\n", err)
 	}
 
 	t.Logf(

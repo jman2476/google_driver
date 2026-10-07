@@ -23,12 +23,23 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 	fileData, err := ValidateFile(path)
 	if err != nil {
 		return fmt.Errorf(
-			"failed to validate file: %v",
+			"failed to validate file: %v\n",
 			err,
 		)
 	}
+	targetId := "root"
 
-	metadata := WriteUploadMetadata(fileData, targetDir)
+	target, err := cfg.FindFolder(targetDir)
+	if err != nil && err != ErrEmptyDir {
+		return fmt.Errorf(
+			"failed to find target folder: %w\n", err,
+		)
+	}
+	if target != nil {
+		targetId = target.Id
+	}
+
+	metadata := WriteUploadMetadata(fileData, targetId)
 	uploadBuilder := cfg.service.Files.Create(metadata)
 	uploadBuilder.Media(fileData.Reader)
 
@@ -43,20 +54,20 @@ func (cfg *apiConfig) UploadFile(path string, targetDir string) error {
 	err = cfg.validateToken()
 	if err != nil {
 		return fmt.Errorf(
-			"upload file: token validation error: %w", err,
+			"upload file: token validation error: %w\n", err,
 		)
 	}
 
-	response, err := uploadBuilder.Fields("id", "name").Do()
+	response, err := uploadBuilder.Fields("id", "name", "parents").Do()
 	if err != nil {
-		fmt.Printf("Response failure: %v", response)
+		fmt.Printf("Response failure: %v\n", response)
 
 		return fmt.Errorf(
-			"upload file error: %w", err,
+			"upload file error: %w\n", err,
 		)
 	}
 
-	fmt.Printf("Response success: %v", response)
+	fmt.Printf("Response success: %v\n", response)
 
 	return nil
 }

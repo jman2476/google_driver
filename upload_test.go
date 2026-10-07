@@ -15,11 +15,11 @@ func TestWriteUploadMetadata(t *testing.T) {
 	}{
 		{
 			path:         "./test_resources/bubbletea_gui.gif",
-			targetFolder: "/Testing/",
+			targetFolder: "test_folder",
 			expected: &drive.File{
 				Name:     "bubbletea_gui.gif",
 				MimeType: "image/gif",
-				Parents:  []string{"/Testing/"},
+				Parents:  []string{"test_folder"},
 			},
 		}, {
 			path:         "./test_resources/chess.mov",
@@ -30,10 +30,11 @@ func TestWriteUploadMetadata(t *testing.T) {
 			},
 		}, {
 			path:         "./test_resources/goose_sqlc-instructions.txt",
-			targetFolder: "",
+			targetFolder: "child_test_folder",
 			expected: &drive.File{
 				Name:     "goose_sqlc-instructions.txt",
 				MimeType: "text/plain; charset=utf-8",
+				Parents:  []string{"child_test_folder"},
 			},
 		},
 	}
@@ -41,14 +42,14 @@ func TestWriteUploadMetadata(t *testing.T) {
 	for _, c := range cases {
 		fileData, err := ValidateFile(c.path)
 		if err != nil {
-			t.Errorf("Fail: unable to validate file: %v", err)
+			t.Errorf("Fail: unable to validate file: %v\n", err)
 		}
 
 		filePointer := WriteUploadMetadata(fileData, c.targetFolder)
 
 		if filePointer.Name != c.expected.Name {
 			t.Errorf(
-				"Fail: drive.File.Name does not match expected:\nExpected: %v\nActual: %v",
+				"Fail: drive.File.Name does not match expected:\nExpected: %v\nActual: %v\n",
 				c.expected.Name,
 				filePointer.Name,
 			)
@@ -56,15 +57,16 @@ func TestWriteUploadMetadata(t *testing.T) {
 
 		if filePointer.MimeType != c.expected.MimeType {
 			t.Errorf(
-				"Fail: drive.File.Name does not match expected:\nExpected: %v\nActual: %v",
+				"Fail: drive.File.MimeType does not match expected:\nExpected: %v\nActual: %v\n",
 				c.expected.MimeType,
 				filePointer.MimeType,
 			)
 		}
 
+		t.Logf("Expected parents: %v\nActual parents: %v", c.expected.Parents, filePointer.Parents)
 		if c.targetFolder != "" && filePointer.Parents[0] != c.expected.Parents[0] {
 			t.Errorf(
-				"Fail: drive.File.Name does not match expected:\nExpected: %v\nActual: %v",
+				"Fail: drive.File.Parents does not match expected:\nExpected: %v\nActual: %v\n",
 				c.expected.Parents[0],
 				filePointer.Parents[0],
 			)
@@ -90,10 +92,10 @@ func TestUploadFile(t *testing.T) {
 	}{
 		{
 			path:   "./test_resources/bubbletea_gui.gif",
-			target: "",
+			target: "test_folder",
 		}, {
 			path:   "./test_resources/goose_sqlc-instructions.txt",
-			target: "",
+			target: "/test_folder/child_test_folder",
 		},
 	}
 
