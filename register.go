@@ -17,8 +17,14 @@ func (cfg *apiConfig) commandRegister(command string) map[string]cliCommand {
 			description: "",
 			callback:    cfg.createFolder,
 		},
-		"login":   {},
-		"logout":  {},
+		"login": {
+			name:        "Log In",
+			description: "Log into your Google account",
+		},
+		"logout": {
+			name:        "Log Out",
+			description: "Log out of your Google account",
+		},
 		"account": {},
 	}
 }
