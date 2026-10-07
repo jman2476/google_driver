@@ -108,53 +108,6 @@ func (cfg *apiConfig) FindFolder(path string) (*drive.File, error) {
 	}
 
 	return currentFolder, nil
-
-	// printDriveFolder(folders)
-
-	// fmt.Printf("folders: %v", folders)
-	// searchQuery := fmt.Sprintf("mimeType = '%s'", driveFolderMIME)
-	// fmt.Printf("Drive MIME type: %s", searchQuery)
-	// var fields googleapi.Field = "files(id, name, parents)"
-
-	// folderList, err := cfg.service.Files.List().Q(searchQuery).Fields(fields).Do()
-	// if err != nil {
-	// 	return nil, fmt.Errorf(
-	// 		"FindFolder error: %w", err,
-	// 	)
-	// }
-
-	// for _, f := range folderList.Files {
-	// 	fmt.Printf("Folder name: %v ID: %v  Parent: %v", f.Name, f.Id, f.Parents[0])
-	// }
-
-	// var tracker = struct {
-	// 	ParentID    string
-	// 	ParentName  string
-	// 	CurrentFile *drive.File
-	// }{}
-	// for _, folder := range folders {
-	// 	fmt.Printf("Checking for folder: %s\n", folder.Name)
-	// 	for _, f := range folderList.Files {
-	// 		fmt.Printf("Folder: %s\n", f.Name)
-	// 		if folder.Name == f.Name {
-	// 			if folder.Parent == "" {
-	// 				tracker.CurrentFile = f
-	// 				break
-	// 			} else if folder.Parent == f.Parents[0] {
-	// 				tracker.ParentName = tracker.CurrentFile.Name
-	// 				tracker.CurrentFile = f
-	// 				tracker.ParentID = f.Parents[0]
-	// 				break
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// if tracker.CurrentFile == nil {
-	// 	return nil, ErrDirNotFound
-	// }
-
-	// return tracker.CurrentFile, nil
 }
 
 func (cfg *apiConfig) CreateFolder(path string) (*drive.File, error) {
