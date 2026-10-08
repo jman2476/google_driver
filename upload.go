@@ -67,7 +67,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		)
 	}
 
-	fmt.Printf("Response success: %v\n", response)
+	fmt.Println("File upload complete")
 
 	return response, nil
 }

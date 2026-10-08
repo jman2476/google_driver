@@ -11,10 +11,14 @@ type cliCommand struct {
 func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 	return map[string]cliCommand{
 		"rm": {},
-		"mv": {},
+		"mv": {
+			name:        "Move",
+			description: "Upload file to your Google Drive",
+			callback:    cfg.uploadFile,
+		},
 		"mkdir": {
-			name:        "make directory on drive",
-			description: "",
+			name:        "Make directory",
+			description: "make new directory on your Google Drive",
 			callback:    cfg.createFolder,
 		},
 		"login": {
