@@ -42,7 +42,7 @@ func main() {
 	case "logout":
 		_, err := config.commandLogOut(args.source, args.target)
 		if err != nil {
-			fmt.Printf("Log out error: %w\n", err)
+			fmt.Printf("Log out error: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Printf("Succesfully logged out")
