@@ -8,7 +8,7 @@ type cliCommand struct {
 	callback    func(string, string) (*drive.File, error)
 }
 
-func (cfg *apiConfig) commandRegister(command string) map[string]cliCommand {
+func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 	return map[string]cliCommand{
 		"rm": {},
 		"mv": {},
