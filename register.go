@@ -20,11 +20,12 @@ func (cfg *apiConfig) commandRegister(command string) map[string]cliCommand {
 		"login": {
 			name:        "Log In",
 			description: "Log into your Google account",
+			callback:    cfg.commandLogIn,
 		},
 		"logout": {
 			name:        "Log Out",
 			description: "Log out of your Google account",
-			callback:    cfg.eraseTokenCache,
+			callback:    cfg.commandLogOut,
 		},
 		"account": {
 			name:        "Account details",
