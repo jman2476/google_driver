@@ -12,8 +12,7 @@ type FileData struct {
 	AbsPath string
 	Info    os.FileInfo
 	Mime    string
-	// Data    []byte
-	Reader *os.File
+	Reader  *os.File
 }
 
 func FindFile(path string) (string, os.FileInfo, error) {
@@ -48,8 +47,6 @@ func ValidateFile(path string) (file FileData, err error) {
 	if err != nil {
 		return FileData{}, fmt.Errorf("unable to read file: %w", err)
 	}
-
-	// file.Data = data
 
 	nameParts := strings.Split(file.Info.Name(), ".")
 	extension := "." + nameParts[len(nameParts)-1]
