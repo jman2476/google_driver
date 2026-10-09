@@ -151,6 +151,22 @@ func TestValidateFile(t *testing.T) {
 			),
 			expectName: "goose_sqlc-instructions.txt",
 			expectMime: "text/plain",
+		}, {
+			path: "./test_resources/LICENSE",
+			expectAbsPath: filepath.Join(
+				currentDir,
+				"./test_resources/LICENSE",
+			),
+			expectName: "LICENSE",
+			expectMime: "text/plain",
+		}, {
+			path: "./test_resources/NO_EXTENSION",
+			expectAbsPath: filepath.Join(
+				currentDir,
+				"./test_resources/NO_EXTENSION",
+			),
+			expectName: "NO_EXTENSION",
+			expectMime: "text/plain",
 		},
 	}
 
