@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"mime"
+	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type FileData struct {
@@ -48,12 +49,25 @@ func ValidateFile(path string) (file FileData, err error) {
 		return FileData{}, fmt.Errorf("unable to read file: %w", err)
 	}
 
-	nameParts := strings.Split(file.Info.Name(), ".")
-	extension := "." + nameParts[len(nameParts)-1]
-	mimeType := mime.TypeByExtension(extension)
-
-	file.Mime = mimeType
 	file.Reader = fileHandle
 
+	// nameParts := strings.Split(file.Info.Name(), ".")
+	// extension := "." + nameParts[len(nameParts)-1]
+	// mimeType := mime.TypeByExtension(extension)
+
+	extension := filepath.Ext(file.Info.Name())
+	mimeType := mime.TypeByExtension(extension)
+	if mimeType == "" {
+		buf := make([]byte, 512)
+		n, _ := fileHandle.Read(buf)
+		fileHandle.Seek(0, io.SeekStart)
+		if n > 0 {
+			mimeType = http.DetectContentType(buf[:n])
+		} else {
+			mimeType = "application/octet-stream"
+		}
+	}
+
+	file.Mime = mimeType
 	return
 }
