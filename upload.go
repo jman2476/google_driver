@@ -58,7 +58,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		)
 	}
 
-	response, err := uploadBuilder.Fields("id", "name", "parents").Do()
+	response, err := uploadBuilder.Fields("id", "name", "parents", "size", "webViewLink").Do()
 	if err != nil {
 		fmt.Printf("Response failure: %v\n", response)
 
@@ -67,7 +67,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		)
 	}
 
-	fmt.Println("File upload complete")
+	fmt.Printf("File uploaded to %s\n", response.WebViewLink)
 
 	return response, nil
 }
