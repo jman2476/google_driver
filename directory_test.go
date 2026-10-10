@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"testing"
 	"time"
 )
@@ -80,12 +79,12 @@ func TestFindFolder(t *testing.T) {
 	var config apiConfig
 	err := config.setClient()
 	if err != nil {
-		log.Fatalf("Error setting client: %v\n", err)
+		t.Fatalf("Error setting client: %v\n", err)
 	}
 
 	err = config.setService()
 	if err != nil {
-		log.Fatalf("Error setting service: %v\n", err)
+		t.Fatalf("Error setting service: %v\n", err)
 	}
 
 	cases := "test_folder"
@@ -93,6 +92,9 @@ func TestFindFolder(t *testing.T) {
 	folder, err := config.findFolder(cases)
 	if err != nil {
 		t.Fatalf("Fail: TFF error: %v\n", err)
+	}
+	if folder == nil {
+		t.Fatalf("Expected folder, got nil")
 	}
 
 	fmt.Printf("Folder: %s\n", folder.Name)
