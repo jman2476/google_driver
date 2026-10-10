@@ -28,6 +28,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		)
 	}
 	targetId := "root"
+	defer fileData.Reader.Close()
 
 	target, err := cfg.findFolder(targetDir)
 	if err != nil && err != ErrEmptyDir {
