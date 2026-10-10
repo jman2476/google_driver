@@ -156,7 +156,7 @@ func (cfg *apiConfig) createFolder(path string, _ string) (*drive.File, error) {
 		)
 	}
 
-	folderResp, err := uploadBuilder.Fields("id", "name").Do()
+	folderResp, err := uploadBuilder.Fields("id", "name", "webViewLink").Do()
 	if err != nil {
 		fmt.Printf("Response failure: %v\n", folderResp)
 
@@ -165,7 +165,7 @@ func (cfg *apiConfig) createFolder(path string, _ string) (*drive.File, error) {
 		)
 	}
 
-	fmt.Printf("Response success: %v\n", folderResp)
+	fmt.Printf("Folder made at %s\n", folderResp.WebViewLink)
 	return folderResp, nil
 }
 
