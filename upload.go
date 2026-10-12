@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/jman2476/google-driver/internal/progress"
 	"google.golang.org/api/drive/v3"
 )
 
@@ -40,9 +41,12 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		targetId = target.Id
 	}
 
+	progressTracker := &progress.Tracker{File: fileData.Reader}
+	progressTracker.SetSize(fileData.Info.Size())
+
 	metadata := writeUploadMetadata(fileData, targetId)
 	uploadBuilder := cfg.service.Files.Create(metadata)
-	uploadBuilder.Media(fileData.Reader)
+	uploadBuilder.Media(progressTracker)
 
 	// TODO:
 	// - Check if target directory exists/directory path exists

@@ -7,22 +7,27 @@ import (
 
 type Tracker struct {
 	File     *os.File
-	Size     int
+	Size     int64
 	Progress int
 	TermTracker
 }
 
-func (t *Tracker) SetSize(n int) {
+func (t *Tracker) SetSize(n int64) {
 	t.Size = n
 }
 
 func (t *Tracker) Read(buf []byte) (n int, err error) {
 	n, err = t.File.Read(buf)
 	if err != nil {
-		return 0, err
+		return
 	}
 
 	t.Progress += n
+
+	err = t.PrintProgress()
+	if err != nil {
+		return
+	}
 
 	return
 }
@@ -40,6 +45,6 @@ func (t *Tracker) PrintProgress() error {
 		return err
 	}
 
-	fmt.Printf("Uploading: %d/%d bytes (%.1f%%)\n", t.Progress, t.Size, progress)
+	fmt.Printf("Uploading: %d/%d bytes (%.1f%%)\r", t.Progress, t.Size, progress*100)
 	return nil
 }
