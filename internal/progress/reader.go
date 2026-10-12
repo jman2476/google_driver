@@ -2,8 +2,10 @@ package progress
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strings"
+	"time"
 
 	"golang.org/x/term"
 )
@@ -13,11 +15,16 @@ type Tracker struct {
 	Size     int64
 	Progress int
 	TermTracker
-	window int
+	window     int
+	lastUpload time.Time
 }
 
 func (t *Tracker) SetSize(n int64) {
 	t.Size = n
+}
+
+func (t *Tracker) SetTime(now time.Time) {
+	t.lastUpload = now
 }
 
 func (t *Tracker) Read(buf []byte) (n int, err error) {
@@ -28,7 +35,7 @@ func (t *Tracker) Read(buf []byte) (n int, err error) {
 
 	t.Progress += n
 
-	err = t.PrintProgressBar()
+	err = t.PrintProgressBar(n)
 	if err != nil {
 		return
 	}
@@ -53,17 +60,26 @@ func (t *Tracker) PrintProgress() error {
 	return nil
 }
 
-func (t *Tracker) PrintProgressBar() error {
+func (t *Tracker) PrintProgressBar(n int) error {
+	timeStamp := time.Now()
+	elapsed := timeStamp.Sub(t.lastUpload)
+	t.lastUpload = timeStamp
+
 	t.window = int(os.Stdin.Fd())
 	width, _, err := term.GetSize(t.window)
 	if err != nil {
 		return err
 	}
 
+	uploadRate := calcRate(elapsed, n)
+	// remaining := float64(t.Size-int64(t.Progress)) / uploadRate
+
 	progress, err := t.CalcProgress()
 	if err != nil {
 		return err
 	}
+
+	// t.calcTimeRemaining(uploadRate)
 
 	var message strings.Builder
 	message.Write([]byte("Uploading: "))
@@ -79,8 +95,65 @@ func (t *Tracker) PrintProgressBar() error {
 		}
 	}
 
-	message.Write(fmt.Appendf([]byte{}, " [%s]\r", bar.String()))
+	message.Write(fmt.Appendf(
+		[]byte{}, " [%s] %s  %s remaining\n",
+		bar.String(), formatRate(uploadRate), t.calcTimeRemaining(uploadRate)))
 
 	fmt.Print(message.String())
 	return nil
+}
+
+func calcRate(elapse time.Duration, n int) float64 {
+	return float64(n) / elapse.Seconds()
+}
+
+func formatRate(rate float64) string {
+	exp := math.Log10(rate)
+
+	switch int(exp) % 3 {
+	case 4:
+		return fmt.Sprintf("%.1f TB/s", rate/math.Pow10(int(exp)))
+	case 3:
+		return fmt.Sprintf("%.1f GB/s", rate/math.Pow10(int(exp)))
+	case 2:
+		return fmt.Sprintf("%.1f MB/s", rate/math.Pow10(int(exp)))
+	case 1:
+		return fmt.Sprintf("%.1f KB/s", rate/math.Pow10(int(exp)))
+	default:
+		return fmt.Sprintf("%.1f B/s", rate)
+	}
+}
+
+func (t *Tracker) calcTimeRemaining(rate float64) string {
+	remaining := t.Size - int64(t.Progress)
+	fmt.Printf("%d B, %.2f B/s", remaining, rate)
+
+	timeRemainder := float64(remaining) / rate
+	fmt.Println(timeRemainder, "s")
+
+	if timeRemainder > 1 {
+		seconds := int(timeRemainder) % 60
+		minutes := int(timeRemainder) / 60
+		hours := minutes / 60
+		minutes = minutes % 60
+
+		var remaining strings.Builder
+		if hours > 0 {
+			remaining.Write(
+				fmt.Appendf([]byte{}, "%dh", hours),
+			)
+		}
+		if minutes > 0 {
+			remaining.Write(
+				fmt.Appendf([]byte{}, "%dm", minutes),
+			)
+		}
+		remaining.Write(
+			fmt.Appendf([]byte{}, "%d", seconds),
+		)
+
+		return remaining.String()
+	}
+
+	return fmt.Sprintf("%.2fs", timeRemainder)
 }
