@@ -13,6 +13,7 @@ type Tracker struct {
 	Size     int64
 	Progress int
 	TermTracker
+	window int
 }
 
 func (t *Tracker) SetSize(n int64) {
@@ -69,7 +70,7 @@ func (t *Tracker) PrintProgressBar() error {
 	message.Write(fmt.Appendf([]byte{}, "%.2f%%", progress*100))
 
 	var bar strings.Builder
-	barWidth := width * 1 / 2
+	barWidth := width * 1 / 3
 	for i := 0; i <= barWidth; i++ {
 		if i <= int(float64(barWidth)*progress) {
 			bar.Write([]byte("X"))

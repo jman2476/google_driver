@@ -8,9 +8,9 @@ import (
 )
 
 type TermTracker struct {
-	term   *term.Terminal
-	state  *term.State
-	window int
+	term  *term.Terminal
+	state *term.State
+	// window int
 }
 
 func (t *Tracker) SetRawMode() error {
