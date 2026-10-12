@@ -3,6 +3,9 @@ package progress
 import (
 	"fmt"
 	"os"
+	"strings"
+
+	"golang.org/x/term"
 )
 
 type Tracker struct {
@@ -24,7 +27,7 @@ func (t *Tracker) Read(buf []byte) (n int, err error) {
 
 	t.Progress += n
 
-	err = t.PrintProgress()
+	err = t.PrintProgressBar()
 	if err != nil {
 		return
 	}
@@ -46,5 +49,37 @@ func (t *Tracker) PrintProgress() error {
 	}
 
 	fmt.Printf("Uploading: %d/%d bytes (%.1f%%)\r", t.Progress, t.Size, progress*100)
+	return nil
+}
+
+func (t *Tracker) PrintProgressBar() error {
+	t.window = int(os.Stdin.Fd())
+	width, _, err := term.GetSize(t.window)
+	if err != nil {
+		return err
+	}
+
+	progress, err := t.CalcProgress()
+	if err != nil {
+		return err
+	}
+
+	var message strings.Builder
+	message.Write([]byte("Uploading: "))
+	message.Write(fmt.Appendf([]byte{}, "%.2f%%", progress*100))
+
+	var bar strings.Builder
+	barWidth := width * 1 / 2
+	for i := 0; i <= barWidth; i++ {
+		if i <= int(float64(barWidth)*progress) {
+			bar.Write([]byte("X"))
+		} else {
+			bar.Write([]byte("-"))
+		}
+	}
+
+	message.Write(fmt.Appendf([]byte{}, " [%s]\r", bar.String()))
+
+	fmt.Print(message.String())
 	return nil
 }
