@@ -37,7 +37,7 @@ func main() {
 			fmt.Printf("Log in error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Succesfully logged in")
+		fmt.Printf("Successfully logged in\n")
 		os.Exit(0)
 	case "logout":
 		_, err := config.commandLogOut(args.source, args.target)
@@ -45,7 +45,7 @@ func main() {
 			fmt.Printf("Log out error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Succesfully logged out")
+		fmt.Printf("Successfully logged out\n")
 		os.Exit(0)
 	default:
 		err := config.setClient()
