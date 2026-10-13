@@ -110,15 +110,15 @@ func calcRate(elapse time.Duration, n int) float64 {
 func formatRate(rate float64) string {
 	exp := math.Log10(rate)
 
-	switch int(exp) % 3 {
+	switch int(exp) / 3 {
 	case 4:
-		return fmt.Sprintf("%.1f TB/s", rate/math.Pow10(int(exp)))
+		return fmt.Sprintf("%.1f TB/s", rate/math.Pow10(12))
 	case 3:
-		return fmt.Sprintf("%.1f GB/s", rate/math.Pow10(int(exp)))
+		return fmt.Sprintf("%.1f GB/s", rate/math.Pow10(9))
 	case 2:
-		return fmt.Sprintf("%.1f MB/s", rate/math.Pow10(int(exp)))
+		return fmt.Sprintf("%.1f MB/s", rate/math.Pow10(6))
 	case 1:
-		return fmt.Sprintf("%.1f KB/s", rate/math.Pow10(int(exp)))
+		return fmt.Sprintf("%.1f KB/s", rate/1000.0)
 	default:
 		return fmt.Sprintf("%.1f B/s", rate)
 	}
