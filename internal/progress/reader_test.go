@@ -1,6 +1,8 @@
 package progress
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestFormatRate(t *testing.T) {
 	cases := []struct {
@@ -43,5 +45,50 @@ func TestFormatRate(t *testing.T) {
 }
 
 func TestCalcTimeRemaining(t *testing.T) {
-	// var case []struct{}
+	//TODO: write test
+	cases := []struct {
+		input    Tracker
+		rate     float64
+		expected string
+	}{
+		{
+			input: Tracker{
+				Size:     100,
+				Progress: 50,
+			},
+			rate:     50.0,
+			expected: "1s",
+		}, {
+			input: Tracker{
+				Size:     10000,
+				Progress: 5000,
+			},
+			rate:     50.0,
+			expected: "1m40s",
+		}, {
+			input: Tracker{
+				Size:     100,
+				Progress: 75,
+			},
+			rate:     50.0,
+			expected: "0.50s",
+		}, {
+			input: Tracker{
+				Size:     10000,
+				Progress: 0,
+			},
+			rate:     10.0,
+			expected: "16m40s",
+		},
+	}
+
+	for _, c := range cases {
+		result := c.input.calcTimeRemaining(c.rate)
+		if result != c.expected {
+			t.Logf(
+				"Case %v failed:\nExpected: %s\nActual: %s\n",
+				c.input, c.expected, result,
+			)
+		}
+	}
 }

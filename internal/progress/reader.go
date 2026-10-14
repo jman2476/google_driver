@@ -34,11 +34,7 @@ func (t *Tracker) Read(buf []byte) (n int, err error) {
 	}
 
 	t.Progress += n
-
-	err = t.PrintProgressBar(n)
-	if err != nil {
-		return
-	}
+	t.PrintProgressBar(n)
 
 	return
 }
@@ -65,9 +61,12 @@ func (t *Tracker) PrintProgressBar(n int) error {
 	elapsed := timeStamp.Sub(t.lastUpload)
 	t.lastUpload = timeStamp
 
-	t.window = int(os.Stdin.Fd())
+	t.window = int(os.Stdout.Fd())
 	width, _, err := term.GetSize(t.window)
 	if err != nil {
+		if !term.IsTerminal(t.window) {
+			return nil
+		}
 		return err
 	}
 
@@ -135,7 +134,7 @@ func FormatSize(size int64) string {
 	case 2:
 		return fmt.Sprintf("%.1f MB", float64(size)/math.Pow10(6))
 	case 1:
-		return fmt.Sprintf("%.1f MB", float64(size)/1000.0)
+		return fmt.Sprintf("%.1f KB", float64(size)/1000.0)
 	default:
 		return fmt.Sprintf("%d B", size)
 	}
@@ -148,7 +147,7 @@ func (t *Tracker) calcTimeRemaining(rate float64) string {
 	timeRemainder := float64(remaining) / rate
 	// fmt.Println(timeRemainder, "s")
 
-	if timeRemainder > 1 {
+	if timeRemainder >= 1 {
 		seconds := int(timeRemainder) % 60
 		minutes := int(timeRemainder) / 60
 		hours := minutes / 60
@@ -166,7 +165,7 @@ func (t *Tracker) calcTimeRemaining(rate float64) string {
 			)
 		}
 		remaining.Write(
-			fmt.Appendf([]byte{}, "%d", seconds),
+			fmt.Appendf([]byte{}, "%ds", seconds),
 		)
 
 		return remaining.String()
