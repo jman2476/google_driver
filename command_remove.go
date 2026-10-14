@@ -1,7 +1,11 @@
 package main
 
-import "google.golang.org/api/drive/v3"
+import (
+	"fmt"
+
+	"google.golang.org/api/drive/v3"
+)
 
 func (cfg *apiConfig) commandRemove(_, _ string) (*drive.File, error) {
-	return nil, nil
+	return nil, fmt.Errorf("Not implemented")
 }

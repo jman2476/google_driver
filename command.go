@@ -10,7 +10,16 @@ type cliCommand struct {
 
 func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 	return map[string]cliCommand{
-		"rm": {},
+		"ls": {
+			name:        "List directory",
+			description: "List contents of the given directory",
+			callback:    cfg.commandList,
+		},
+		"rm": {
+			name:        "Remove",
+			description: "Remove/delete a file or directory",
+			callback:    cfg.commandRemove,
+		},
 		"mv": {
 			name:        "Move",
 			description: "Upload file to your Google Drive",
@@ -35,11 +44,6 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 			name:        "Account details",
 			description: "Get current account",
 			callback:    cfg.commandAccount,
-		},
-		"ls": {
-			name:        "List directory",
-			description: "List contents of the given directory",
-			callback:    cfg.commandList,
 		},
 	}
 }
