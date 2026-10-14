@@ -55,7 +55,6 @@ func ParsePath(folderPath string) ([]DriveFolder, error) {
 }
 
 func (cfg *apiConfig) findFolder(path string) (*drive.File, error) {
-	// Start assuming only search depth of one
 	folders, err := ParsePath(path)
 	if err != nil {
 		if err == ErrEmptyDir {
@@ -167,6 +166,25 @@ func (cfg *apiConfig) createFolder(path string, _ string) (*drive.File, error) {
 
 	fmt.Printf("Folder made at %s\n", folderResp.WebViewLink)
 	return folderResp, nil
+}
+
+func (cfg *apiConfig) listFolder(parentID string) (*drive.FileList, error) {
+	query := fmt.Sprintf(
+		"'%s' in parents and trashed = false",
+		parentID,
+	)
+
+	res, err := cfg.service.Files.List().
+		Q(query).
+		Fields("files(id, name, mimeType, size)").
+		Do()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"error getting folder %s contents: %v", parentID, err,
+		)
+	}
+
+	return res, nil
 }
 
 func DeleteFolder(path string) (*drive.File, error) {

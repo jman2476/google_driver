@@ -36,5 +36,10 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 			description: "Get current account",
 			callback:    cfg.commandAccount,
 		},
+		"ls": {
+			name:        "List directory",
+			description: "List contents of the given directory",
+			callback:    cfg.commandList,
+		},
 	}
 }
