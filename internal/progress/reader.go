@@ -72,14 +72,11 @@ func (t *Tracker) PrintProgressBar(n int) error {
 	}
 
 	uploadRate := calcRate(elapsed, n)
-	// remaining := float64(t.Size-int64(t.Progress)) / uploadRate
 
 	progress, err := t.CalcProgress()
 	if err != nil {
 		return err
 	}
-
-	// t.calcTimeRemaining(uploadRate)
 
 	var message strings.Builder
 	message.Write([]byte("Uploading: "))

@@ -41,3 +41,7 @@ func TestFormatRate(t *testing.T) {
 		}
 	}
 }
+
+func TestCalcTimeRemaining(t *testing.T) {
+	// var case []struct{}
+}
