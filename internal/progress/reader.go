@@ -96,8 +96,11 @@ func (t *Tracker) PrintProgressBar(n int) error {
 	}
 
 	message.Write(fmt.Appendf(
-		[]byte{}, " [%s] %s  %s remaining\n",
-		bar.String(), formatRate(uploadRate), t.calcTimeRemaining(uploadRate)))
+		[]byte{}, " [%s] %s  %s remaining\r",
+		bar.String(),
+		formatRate(uploadRate),
+		t.calcTimeRemaining(uploadRate),
+	))
 
 	fmt.Print(message.String())
 	return nil
@@ -124,12 +127,29 @@ func formatRate(rate float64) string {
 	}
 }
 
+func FormatSize(size int64) string {
+	exp := math.Log10(float64(size))
+
+	switch int(exp) / 3 {
+	case 4:
+		return fmt.Sprintf("%.1f TB", float64(size)/math.Pow10(12))
+	case 3:
+		return fmt.Sprintf("%.1f GB", float64(size)/math.Pow10(9))
+	case 2:
+		return fmt.Sprintf("%.1f MB", float64(size)/math.Pow10(6))
+	case 1:
+		return fmt.Sprintf("%.1f MB", float64(size)/1000.0)
+	default:
+		return fmt.Sprintf("%d B", size)
+	}
+}
+
 func (t *Tracker) calcTimeRemaining(rate float64) string {
 	remaining := t.Size - int64(t.Progress)
-	fmt.Printf("%d B, %.2f B/s", remaining, rate)
+	// fmt.Printf("%d B, %.2f B/s", remaining, rate)
 
 	timeRemainder := float64(remaining) / rate
-	fmt.Println(timeRemainder, "s")
+	// fmt.Println(timeRemainder, "s")
 
 	if timeRemainder > 1 {
 		seconds := int(timeRemainder) % 60

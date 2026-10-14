@@ -42,6 +42,8 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		targetId = target.Id
 	}
 
+	fmt.Printf("File size: %s\n\n", progress.FormatSize(fileData.Info.Size()))
+
 	progressTracker := &progress.Tracker{
 		File: fileData.Reader}
 	progressTracker.SetSize(fileData.Info.Size())
