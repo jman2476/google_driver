@@ -78,7 +78,7 @@ func TestRemoveFileErrors(t *testing.T) {
 		{
 			path:        "./test_resources/bubbletea_gui.gif",
 			target:      "test_folder",
-			filename:    "bubbletea_gui_for_delete.gif",
+			filename:    "bubbletea_gui.gif",
 			expectedErr: ErrTooManyFilesFound,
 		}, {
 			path:        "./test_resources/goose_sqlc-instructions_for_delete.txt",
