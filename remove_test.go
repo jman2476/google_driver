@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"testing"
 )
@@ -31,9 +32,9 @@ func TestRemoveFile(t *testing.T) {
 			target:   "test_folder",
 			filename: "bubbletea_gui_for_delete.gif",
 		}, {
-			path:     "./test_resources/goose_sqlc-instructions.txt",
+			path:     "./test_resources/goose_sqlc-instructions_for_delete.txt",
 			target:   "/test_folder/child_test_folder",
-			filename: "goose_sqlc-instructions.txt",
+			filename: "goose_sqlc-instructions_for_delete.txt",
 		},
 	}
 
@@ -57,4 +58,56 @@ func TestRemoveFileErrors(t *testing.T) {
 	//  3-Check error
 	//  4-Attempt delete non-existent file
 	//  5-Check error
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	cases := []struct {
+		path        string
+		target      string
+		filename    string
+		expectedErr error
+	}{
+		{
+			path:        "./test_resources/bubbletea_gui.gif",
+			target:      "test_folder",
+			filename:    "bubbletea_gui_for_delete.gif",
+			expectedErr: ErrTooManyFilesFound,
+		}, {
+			path:        "./test_resources/goose_sqlc-instructions_for_delete.txt",
+			target:      "/test_folder/child_test_folder",
+			filename:    "goose_for_delete.txt",
+			expectedErr: ErrFileNotFound,
+		},
+	}
+
+	for _, c := range cases {
+		_, err := config.uploadFile(c.path, c.target)
+		if err != nil {
+			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)
+		}
+
+		_, err = config.removeFile(c.filename, c.target)
+		if err.Error() != fmt.Sprintf("%v: %s", c.expectedErr, c.filename) {
+			t.Errorf(
+				"Fail case %s:\nExpected: %v\nActual: %v",
+				c.path, c.expectedErr, err,
+			)
+		}
+	}
+
+	_, err = config.removeFile(
+		"goose_sqlc-instructions_for_delete.txt",
+		"/test_folder/child_test_folder",
+	)
+	if err != nil {
+		t.Errorf("Fail: can't clean up test cases: %v", err)
+	}
 }
