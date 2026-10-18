@@ -1,11 +1,23 @@
 package main
 
 import (
-	"fmt"
+	"strings"
 
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandRemove(_, _ string) (*drive.File, error) {
-	return nil, fmt.Errorf("Not implemented")
+func (cfg *apiConfig) commandRemove(filepath, _ string) (*drive.File, error) {
+	lastSlashIdx := strings.LastIndex(filepath, "/")
+	var folderpath string
+	var filename string
+	switch lastSlashIdx {
+	case -1:
+		folderpath = "root"
+		filename = filepath
+	default:
+		folderpath = filepath[:lastSlashIdx-1]
+		filename = filepath[lastSlashIdx:]
+	}
+
+	return cfg.removeFile(filename, folderpath)
 }
