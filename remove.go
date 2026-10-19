@@ -31,7 +31,7 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 
 	res, err := cfg.service.Files.List().
 		Q(query).
-		Fields("files(id, name)").
+		Fields("files(id, name, mimeType)").
 		Do()
 
 	if err != nil {
@@ -57,9 +57,14 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 
 	input := bufio.NewReader(os.Stdin)
 	scanner := bufio.NewScanner(input)
+	fileType := "file"
+	if res.Files[0].MimeType == driveFolderMIME {
+		fileType = "folder"
+	}
+	message := fmt.Sprintf("Are you sure you want to delete this %s? (y/n)  ", fileType)
 
 	for valid := true; valid; {
-		fmt.Print("Are you sure you want to delete this file? (y/n)  ")
+		fmt.Print(message)
 		scanner.Scan()
 
 		if err = scanner.Err(); err != nil {
@@ -78,6 +83,32 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 			return nil, ErrRemoveCanceled
 		} else {
 			valid = false
+		}
+	}
+	if fileType == "folder" {
+		message = "If you delete this folder, all contents will be deleted as well. Continue? (y/n)   "
+
+		for valid := true; valid; {
+			fmt.Print(message)
+			scanner.Scan()
+
+			if err = scanner.Err(); err != nil {
+				return nil, fmt.Errorf(
+					"error reading input: %w", err,
+				)
+			}
+
+			result := scanner.Text()
+			if len(result) > 1 ||
+				len(result) < 1 ||
+				!slices.Contains([]string{"y", "n", "Y", "N"}, result) {
+				fmt.Println("please reply (y/n)")
+				continue
+			} else if slices.Contains([]string{"n", "N"}, result) {
+				return nil, ErrRemoveCanceled
+			} else {
+				valid = false
+			}
 		}
 	}
 
