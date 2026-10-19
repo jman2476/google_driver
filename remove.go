@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
+	"slices"
 
 	"google.golang.org/api/drive/v3"
 )
@@ -12,6 +15,7 @@ var (
 	ErrTooManyFilesFound = errors.New(
 		"File delete: more than one file found with same name",
 	)
+	ErrRemoveCanceled = errors.New("File delete: user canceled")
 )
 
 func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error) {
@@ -47,6 +51,34 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 		return nil, fmt.Errorf(
 			"%w: %s", ErrTooManyFilesFound, fileName,
 		)
+	}
+
+	fmt.Printf("Found file: %v\n", res.Files[0].Name)
+
+	input := bufio.NewReader(os.Stdin)
+	scanner := bufio.NewScanner(input)
+
+	for valid := true; valid; {
+		fmt.Print("Are you sure you want to delete this file? (y/n)  ")
+		scanner.Scan()
+
+		if err = scanner.Err(); err != nil {
+			return nil, fmt.Errorf(
+				"error reading input: %w", err,
+			)
+		}
+
+		result := scanner.Text()
+		if len(result) > 1 ||
+			len(result) < 1 ||
+			!slices.Contains([]string{"y", "n", "Y", "N"}, result) {
+			fmt.Println("please reply (y/n)")
+			continue
+		} else if slices.Contains([]string{"n", "N"}, result) {
+			return nil, ErrRemoveCanceled
+		} else {
+			valid = false
+		}
 	}
 
 	err = cfg.service.Files.Delete(res.Files[0].Id).Do()
