@@ -87,5 +87,5 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 			"unable to delete file: %w", err,
 		)
 	}
-	return nil, nil
+	return &drive.File{Name: fileName}, nil
 }
