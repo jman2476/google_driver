@@ -15,8 +15,8 @@ func (cfg *apiConfig) commandRemove(filepath, _ string) (*drive.File, error) {
 		folderpath = "root"
 		filename = filepath
 	default:
-		folderpath = filepath[:lastSlashIdx-1]
-		filename = filepath[lastSlashIdx:]
+		folderpath = filepath[:lastSlashIdx]
+		filename = filepath[lastSlashIdx+1:]
 	}
 
 	return cfg.removeFile(filename, folderpath)
