@@ -76,7 +76,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		)
 	}
 
-	fmt.Printf("File uploaded to %s\n", response.WebViewLink)
+	fmt.Printf("\nFile uploaded to %s\n", response.WebViewLink)
 
 	return response, nil
 }
