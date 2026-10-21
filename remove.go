@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"os"
 	"slices"
 
 	"google.golang.org/api/drive/v3"
@@ -16,6 +15,7 @@ var (
 		"File delete: more than one file found with same name",
 	)
 	ErrRemoveCanceled = errors.New("File delete: user canceled")
+	ErrScannerEOF     = errors.New("File delete: scanner hit EOF")
 )
 
 func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error) {
@@ -56,7 +56,7 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 	fmt.Printf("Found file: %v\n", res.Files[0].Name)
 
 	var toTrash bool
-	input := bufio.NewReader(os.Stdin)
+	input := bufio.NewReader(cfg.in)
 	scanner := bufio.NewScanner(input)
 	fileType := "file"
 	if res.Files[0].MimeType == driveFolderMIME {
@@ -70,17 +70,20 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 	}
 
 	for i := 0; i < 3; {
-		if i == 2 && fileType != "folder" {
+		if i == 1 && fileType != "folder" {
 			i++
 			continue
 		}
 		fmt.Printf("%s (y/n)   ", userPrompts[i])
-		scanner.Scan()
+		if !scanner.Scan() {
 
-		if err = scanner.Err(); err != nil {
-			return nil, fmt.Errorf(
-				"error reading input: %w", err,
-			)
+			if err = scanner.Err(); err != nil {
+				return nil, fmt.Errorf(
+					"error reading input: %w", err,
+				)
+			}
+
+			return nil, ErrScannerEOF
 		}
 
 		result := scanner.Text()
@@ -93,7 +96,8 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 			i != 2 {
 			return nil, ErrRemoveCanceled
 		} else {
-			if i == 2 {
+			if slices.Contains([]string{"n", "N"}, result) &&
+				i == 2 {
 				toTrash = true
 			}
 			i++

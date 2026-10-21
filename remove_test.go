@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"strings"
 	"testing"
 )
 
@@ -26,19 +28,23 @@ func TestRemoveFile(t *testing.T) {
 		path     string
 		target   string
 		filename string
+		in       io.Reader
 	}{
 		{
 			path:     "./test_resources/bubbletea_gui_for_delete.gif",
 			target:   "test_folder",
 			filename: "bubbletea_gui_for_delete.gif",
+			in:       strings.NewReader("y\ny\n"),
 		}, {
 			path:     "./test_resources/goose_sqlc-instructions_for_delete.txt",
 			target:   "/test_folder/child_test_folder",
 			filename: "goose_sqlc-instructions_for_delete.txt",
+			in:       strings.NewReader("y\ny\n"),
 		},
 	}
 
 	for _, c := range cases {
+		config.in = c.in
 		_, err := config.uploadFile(c.path, c.target)
 		if err != nil {
 			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)
@@ -74,21 +80,25 @@ func TestRemoveFileErrors(t *testing.T) {
 		target      string
 		filename    string
 		expectedErr error
+		in          io.Reader
 	}{
 		{
 			path:        "./test_resources/bubbletea_gui.gif",
 			target:      "test_folder",
 			filename:    "bubbletea_gui.gif",
 			expectedErr: ErrTooManyFilesFound,
+			in:          strings.NewReader("y\ny\n"),
 		}, {
 			path:        "./test_resources/goose_sqlc-instructions_for_delete.txt",
 			target:      "/test_folder/child_test_folder",
 			filename:    "goose_for_delete.txt",
 			expectedErr: ErrFileNotFound,
+			in:          strings.NewReader("y\ny\n"),
 		},
 	}
 
 	for _, c := range cases {
+		config.in = c.in
 		_, err := config.uploadFile(c.path, c.target)
 		if err != nil {
 			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)

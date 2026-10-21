@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -13,6 +14,7 @@ type apiConfig struct {
 	client  *http.Client
 	token   *oauth2.Token
 	service *drive.Service
+	in      io.Reader
 }
 
 type arguments struct {
