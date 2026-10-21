@@ -8,7 +8,7 @@ import (
 )
 
 func (cfg *apiConfig) commandHelp(command, _ string) (*drive.File, error) {
-	var helpMessage string
+	helpMessage := "call 'help <command name>' to get information on a specific command\n"
 
 	if command != "" {
 		helpMessage += formatHelp(command, cfg.commandRegistry()[command])
@@ -27,7 +27,7 @@ func formatHelp(call string, command cliCommand) string {
 	strBuilder.Write(
 		fmt.Appendf(
 			[]byte{},
-			"%s --> %s\n     %s",
+			"%s --> %s\n     %s\n",
 			call, command.name,
 			command.description,
 		),

@@ -45,5 +45,10 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 			description: "Get current account",
 			callback:    cfg.commandAccount,
 		},
+		"help": {
+			name:        "Help menu",
+			description: "Display help information",
+			callback:    cfg.commandHelp,
+		},
 	}
 }
