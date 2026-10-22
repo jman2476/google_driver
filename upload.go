@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jman2476/google-driver/internal/progress"
@@ -25,7 +26,7 @@ func writeUploadMetadata(fileData FileData, targetFolderID, newName string) *dri
 	return meta
 }
 
-func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, error) {
+func (cfg *apiConfig) uploadFile(path string, targetPath string) (*drive.File, error) {
 	fileData, err := ValidateFile(path)
 	if err != nil {
 		return nil, fmt.Errorf(
@@ -35,6 +36,24 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 	}
 	targetId := "root"
 	defer fileData.Reader.Close()
+
+	pathParts, err := ParsePath(targetPath)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to parse target path: %w\n", err,
+		)
+	}
+	var pathPartNames []string
+	for _, p := range pathParts {
+		pathPartNames = append(pathPartNames, p.Name)
+	}
+
+	var targetDir string
+	var targetName string
+	if length := len(pathParts); strings.Contains(pathPartNames[length-1], ".") {
+		targetDir = strings.Join(pathPartNames[:length-1], "/")
+		targetName = pathPartNames[length-1]
+	}
 
 	target, err := cfg.findFolder(targetDir)
 	if err != nil && err != ErrEmptyDir {
@@ -52,7 +71,7 @@ func (cfg *apiConfig) uploadFile(path string, targetDir string) (*drive.File, er
 		File: fileData.Reader}
 	progressTracker.SetSize(fileData.Info.Size())
 	progressTracker.SetTime(time.Now())
-	metadata := writeUploadMetadata(fileData, targetId)
+	metadata := writeUploadMetadata(fileData, targetId, targetName)
 	uploadBuilder := cfg.service.Files.Create(metadata)
 	uploadBuilder.Media(progressTracker)
 
