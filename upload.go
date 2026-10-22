@@ -8,7 +8,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func writeUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
+func writeUploadMetadata(fileData FileData, targetFolderID, newName string) *drive.File {
 	meta := &drive.File{
 		Name:     fileData.Info.Name(),
 		MimeType: fileData.Mime,
@@ -16,6 +16,10 @@ func writeUploadMetadata(fileData FileData, targetFolderID string) *drive.File {
 
 	if targetFolderID != "" {
 		meta.Parents = []string{targetFolderID}
+	}
+
+	if newName != "" {
+		meta.Name = newName
 	}
 
 	return meta

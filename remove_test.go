@@ -6,7 +6,13 @@ import (
 	"log"
 	"strings"
 	"testing"
+	"time"
 )
+
+func genTimeStampFilename(base, ext string) string {
+	currTime := time.Now()
+	return fmt.Sprintf("%s-%v:%v.%s", base, currTime.Hour(), currTime.Minute(), ext)
+}
 
 func TestRemoveFile(t *testing.T) {
 	// Test steps:
@@ -25,21 +31,24 @@ func TestRemoveFile(t *testing.T) {
 	}
 
 	cases := []struct {
-		path     string
-		target   string
-		filename string
-		in       io.Reader
+		path      string
+		target    string
+		basename  string
+		extension string
+		in        io.Reader
 	}{
 		{
-			path:     "./test_resources/bubbletea_gui_for_delete.gif",
-			target:   "test_folder",
-			filename: "bubbletea_gui_for_delete.gif",
-			in:       strings.NewReader("y\ny\n"),
+			path:      "./test_resources/bubbletea_gui_for_delete.gif",
+			target:    "test_folder",
+			basename:  "bubbletea_gui_for_delete",
+			extension: "gif",
+			in:        strings.NewReader("y\ny\n"),
 		}, {
-			path:     "./test_resources/goose_sqlc-instructions_for_delete.txt",
-			target:   "/test_folder/child_test_folder",
-			filename: "goose_sqlc-instructions_for_delete.txt",
-			in:       strings.NewReader("y\ny\n"),
+			path:      "./test_resources/goose_sqlc-instructions_for_delete.txt",
+			target:    "/test_folder/child_test_folder",
+			basename:  "goose_sqlc-instructions_for_delete.txt",
+			extension: "txt",
+			in:        strings.NewReader("y\ny\n"),
 		},
 	}
 
