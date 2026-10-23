@@ -11,7 +11,7 @@ import (
 
 func genTimeStampFilename(base, ext string) string {
 	currTime := time.Now()
-	return fmt.Sprintf("%s-%v:%v.%s", base, currTime.Hour(), currTime.Minute(), ext)
+	return fmt.Sprintf("%s-%v:%v%s", base, currTime.Hour(), currTime.Minute(), ext)
 }
 
 func TestRemoveFile(t *testing.T) {
@@ -59,7 +59,8 @@ func TestRemoveFile(t *testing.T) {
 			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)
 		}
 
-		_, err = config.removeFile(c.filename, c.target)
+		_, err = config.removeFile(
+			genTimeStampFilename(c.basename, c.extension), c.target)
 		if err != nil {
 			t.Errorf("Fail case %s: error deleting file on drive: %v", c.path, err)
 		}

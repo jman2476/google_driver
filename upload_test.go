@@ -45,7 +45,7 @@ func TestWriteUploadMetadata(t *testing.T) {
 			t.Errorf("Fail: unable to validate file: %v\n", err)
 		}
 
-		filePointer := writeUploadMetadata(fileData, c.targetFolder)
+		filePointer := writeUploadMetadata(fileData, c.targetFolder, "")
 
 		if filePointer.Name != c.expected.Name {
 			t.Errorf(
