@@ -75,3 +75,5 @@ Here is a comprehensive progress check on your **[Stage 4: CLI Interface, Comman
 1. Add an unknown-command guard and a `help` command in [command.go](file:///home/jeremy/projects/google_driver/command.go) / [main.go](file:///home/jeremy/projects/google_driver/main.go) to print usage text.
 2. Upgrade [parse.go](file:///home/jeremy/projects/google_driver/parse.go) to support flags (especially for optional destination directory `--dir` and confirmation `--yes`).
 3. Return the deleted file metadata from [`removeFile`](file:///home/jeremy/projects/google_driver/remove.go#L58) and add a user confirmation prompt before deletion.
+
+Potato
