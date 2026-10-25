@@ -9,16 +9,22 @@ import (
 
 func (cfg *apiConfig) commandHelp(command, _ string) (*drive.File, error) {
 	helpMessage := "call 'help <command name>' to get information on a specific command\n"
+	var msgWriter strings.Builder
+	msgWriter.Write([]byte(helpMessage))
 
 	if command != "" {
-		helpMessage += formatHelp(command, cfg.commandRegistry()[command])
+		msgWriter.Write([]byte(
+			formatHelp(command, cfg.commandRegistry()[command]),
+		))
 	} else {
 		for call, cmd := range cfg.commandRegistry() {
-			helpMessage += formatHelp(call, cmd)
+			msgWriter.Write([]byte(
+				formatHelp(call, cmd),
+			))
 		}
 	}
 
-	fmt.Println(helpMessage)
+	fmt.Println(msgWriter.String())
 	return nil, nil
 }
 
