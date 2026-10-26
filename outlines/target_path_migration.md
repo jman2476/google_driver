@@ -8,7 +8,7 @@ This checklist outlines the locations and logic across the codebase requiring fi
 
 - [X] `Lines 40-45` - Handle empty target path inputs so uploads with no target destination default to the root folder with the original filename instead of failing path validation when `ParsePath` returns an empty directory error.
 
-- [ ] `Lines 40-56` - Support explicit directory paths indicated by a trailing slash (e.g., specifying a folder destination where the file keeps its original filename).
+- [X] `Lines 40-56` - Support explicit directory paths indicated by a trailing slash (e.g., specifying a folder destination where the file keeps its original filename).
 
 - [ ] `Lines 51-56`- Replace the period detection check on the final path segment (`strings.Contains(..., ".")`) with robust logic that can distinguish between a folder destination and a target filename.
 

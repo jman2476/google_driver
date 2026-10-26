@@ -71,3 +71,31 @@ func ValidateFile(path string) (file FileData, err error) {
 	file.Mime = mimeType
 	return
 }
+
+// Function to read drive upload path and deliver:
+// -- Target folder
+// -- Target name
+// -- is target a folder?
+func (cfg apiConfig) ValidateUploadPath(path string) (
+	dirID,
+	name string,
+	isFolder bool,
+	err error,
+) {
+	roots := []string{
+		"",
+		"root",
+		"/root",
+		"root/",
+		"/root/",
+	}
+	if path == "" || "root" || "/root" ||
+
+	folder, err := cfg.findFolder(path)
+	if err == nil {
+		dirID
+	}
+
+
+	return
+}
