@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -328,7 +329,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 		{
 			path: "/test_folder/",
 			expected: expected{
-				dirId:    "",
+				dirId:    "1qXisdgvsZx1V-YTyIWp0Ha28HOGzw5WF",
 				name:     "",
 				isFolder: true,
 				err:      nil,
@@ -336,7 +337,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 		}, {
 			path: "test_folder",
 			expected: expected{
-				dirId:    "",
+				dirId:    "1qXisdgvsZx1V-YTyIWp0Ha28HOGzw5WF",
 				name:     "",
 				isFolder: true,
 				err:      nil,
@@ -344,7 +345,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 		}, {
 			path: "test_folder/child_test_folder",
 			expected: expected{
-				dirId:    "",
+				dirId:    "1S8x3ni_BVO5H7usudX3RJ1b79jb5P4Fi",
 				name:     "",
 				isFolder: true,
 				err:      nil,
@@ -379,7 +380,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 				dirId:    "",
 				name:     "",
 				isFolder: true,
-				err:      ErrFolderDNE,
+				err:      nil,
 			},
 		}, {
 			path: "test_folder/child_test_folder/dot.folder_test",
@@ -387,9 +388,43 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 				dirId:    "",
 				name:     "",
 				isFolder: true,
-				err:      ErrFolderDNE,
+				err:      nil,
 			},
 		},
+	}
+
+	for _, c := range cases {
+		dirID, name, isFolder, err := config.ValidateUploadPath(c.path)
+		expectedErr := fmt.Errorf("%v: %s", ErrFolderDNE, c.path)
+		if err == nil {
+			expectedErr = err
+		}
+		if dirID != c.dirId {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %s\n Actual: %s",
+				c.path, c.dirId, dirID,
+			)
+		}
+		if name != c.name {
+			t.Errorf(
+				"Fail: case: %s\nExpected: [%s]\n Actual: [%s]",
+				c.path, c.name, name,
+			)
+		}
+		if isFolder != c.isFolder {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %t \n Actual: %t",
+				c.path, c.isFolder, isFolder,
+			)
+		}
+		if err.Error() != expectedErr.Error() {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %v\n Actual: %v",
+				c.path,
+				expectedErr,
+				err,
+			)
+		}
 	}
 }
 
