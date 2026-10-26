@@ -1,12 +1,18 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
+)
+
+var (
+	ErrFolderDNE = errors.New("no folder found at path")
 )
 
 type FileData struct {
@@ -76,6 +82,14 @@ func ValidateFile(path string) (file FileData, err error) {
 // -- Target folder
 // -- Target name
 // -- is target a folder?
+
+// What to check:
+// 1- is the path just root?
+// 2- does the path lead directly to a folder on drive?
+// 3- does path end in '/', and we should only look for a folder?
+// 4-
+// 5-
+// 6-
 func (cfg apiConfig) ValidateUploadPath(path string) (
 	dirID,
 	name string,
@@ -89,13 +103,18 @@ func (cfg apiConfig) ValidateUploadPath(path string) (
 		"root/",
 		"/root/",
 	}
-	if path == "" || "root" || "/root" ||
+	if slices.Contains(roots, path) {
+		dirID = "root"
+		isFolder = true
+		return
+	}
 
 	folder, err := cfg.findFolder(path)
 	if err == nil {
-		dirID
+		dirID = folder.Id
+		isFolder = true
+		return
 	}
-
 
 	return
 }

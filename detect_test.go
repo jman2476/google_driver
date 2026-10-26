@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -248,5 +249,150 @@ func TestValidateUnreadableFile(t *testing.T) {
 			fileData,
 		)
 	}
+
+}
+
+func TestValidateUploadPathRoot(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	cases := []string{
+		"",
+		"root",
+		"/root",
+		"root/",
+		"/root/",
+	}
+
+	for _, c := range cases {
+		dirID, name, isFolder, err := config.ValidateUploadPath(c)
+
+		if dirID != "root" {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %s\n Actual: %s",
+				c, "root", dirID,
+			)
+		}
+		if name != "" {
+			t.Errorf(
+				"Fail: case: %s\nExpected: [%s]\n Actual: [%s]",
+				c, "", name,
+			)
+		}
+		if !isFolder {
+			t.Errorf(
+				"Fail: case: %s\nExpected: true \n Actual: %t",
+				c, isFolder,
+			)
+		}
+		if err != nil {
+			t.Errorf(
+				"Fail: case: %s\nExpected: nil\n Actual: %v",
+				c, err,
+			)
+		}
+	}
+}
+
+func TestValidateUploadPathIsFolder(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	type expected struct {
+		dirId    string
+		name     string
+		isFolder bool
+		err      error
+	}
+
+	cases := []struct {
+		path string
+		expected
+	}{
+		{
+			path: "/test_folder/",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      nil,
+			},
+		}, {
+			path: "test_folder",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      nil,
+			},
+		}, {
+			path: "test_folder/child_test_folder",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      nil,
+			},
+		}, {
+			path: "test_folder/boogie_wonderland/",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		}, {
+			path: "test_folder/child_test_folder/chess.mov/",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		}, {
+			path: "test_folder/child_test_folder/chess.mov/",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		}, {
+			path: "test_folder/child_test_folder/dot.test.folder",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		}, {
+			path: "test_folder/child_test_folder/dot.folder_test",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		},
+	}
+}
+
+func TestValidateUploadPathIsFile(t *testing.T) {
 
 }
