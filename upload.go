@@ -35,6 +35,10 @@ func (cfg *apiConfig) uploadFile(path string, targetPath string) (*drive.File, e
 		)
 	}
 	targetId := "root"
+	if targetPath == "" {
+		targetPath = targetId
+	}
+
 	defer fileData.Reader.Close()
 
 	pathParts, err := ParsePath(targetPath)

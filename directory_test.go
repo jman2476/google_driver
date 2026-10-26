@@ -44,6 +44,16 @@ func TestParsePath(t *testing.T) {
 			input:       "/first//",
 			expected:    []DriveFolder{},
 			expectedErr: ErrParseDirs,
+		}, {
+			input: "root",
+			expected: []DriveFolder{
+				{Name: "root", Parent: ""},
+			},
+			expectedErr: nil,
+		}, {
+			input:       "",
+			expected:    []DriveFolder{},
+			expectedErr: ErrEmptyDir,
 		},
 	}
 
@@ -52,7 +62,7 @@ func TestParsePath(t *testing.T) {
 
 		if len(result) != len(c.expected) {
 			t.Errorf(
-				"Fail: Parse path result length doesn't match\nCase: %v\nExpected: %v\nActual: %v",
+				"Fail: Parse path result length doesn't match\nCase: [%v]\nExpected: %v\nActual: %v",
 				c.input, len(c.expected), len(result),
 			)
 		}
@@ -60,7 +70,7 @@ func TestParsePath(t *testing.T) {
 		for i, r := range result {
 			if r != c.expected[i] {
 				t.Errorf(
-					"Fail: ParsePath result doesn't match expected\nCase: %v\nExpected: %v\nActual: %v",
+					"Fail: ParsePath result doesn't match expected\nCase: [%v]\nExpected: %v\nActual: %v",
 					c.input, c.expected[i], r,
 				)
 			}
@@ -68,7 +78,7 @@ func TestParsePath(t *testing.T) {
 
 		if err != c.expectedErr {
 			t.Errorf(
-				"Fail: ParsePath error doesn't match expected\nCase: %v\nExpected: %v\nActual: %v",
+				"Fail: ParsePath error doesn't match expected\nCase: [%v]\nExpected: %v\nActual: %v",
 				c.input, c.expectedErr, err,
 			)
 		}
