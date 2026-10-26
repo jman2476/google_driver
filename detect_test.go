@@ -378,7 +378,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 		}, {
 			path: "test_folder/child_test_folder/dot.test.folder",
 			expected: expected{
-				dirId:    "",
+				dirId:    "13Ao5zWzDw38A4WKhF1zOPrC3tRnbs4UV",
 				name:     "",
 				isFolder: true,
 				err:      nil,
@@ -386,7 +386,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 		}, {
 			path: "test_folder/child_test_folder/dot.folder_test",
 			expected: expected{
-				dirId:    "",
+				dirId:    "1gUS-RdhGC1Vojna3E3b1SZFq6UpFs6om",
 				name:     "",
 				isFolder: true,
 				err:      nil,
