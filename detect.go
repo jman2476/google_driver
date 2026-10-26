@@ -115,7 +115,7 @@ func (cfg apiConfig) ValidateUploadPath(path string) (
 		isFolder = true
 		return
 	} else if length := len(path); path[length-1] == '/' {
-		err = fmt.Errorf("%v: %s", ErrFolderDNE, path)
+		err = fmt.Errorf("%w: %s", ErrFolderDNE, path)
 		isFolder = true
 		return
 	}

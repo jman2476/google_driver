@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -417,13 +418,18 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 				c.path, c.isFolder, isFolder,
 			)
 		}
-		if err.Error() != expectedErr.Error() {
-			t.Errorf(
-				"Fail: case: %s\nExpected: %v\n Actual: %v",
-				c.path,
-				expectedErr,
-				err,
-			)
+		if err != c.err {
+			if c.err == nil && err == nil {
+				continue
+			}
+			if !errors.Is(err, c.err) {
+				t.Errorf(
+					"Fail: case: %s\nExpected: %v\n Actual: %v",
+					c.path,
+					expectedErr,
+					err,
+				)
+			}
 		}
 	}
 }
