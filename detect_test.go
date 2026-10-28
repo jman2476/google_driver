@@ -435,5 +435,92 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 }
 
 func TestValidateUploadPathIsFile(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	type expected struct {
+		dirId    string
+		name     string
+		isFolder bool
+		err      error
+	}
+
+	cases := []struct {
+		path string
+		expected
+	}{
+		{
+			path: "test_folder/bingo.txt",
+			expected: expected{
+				dirId:    "1qXisdgvsZx1V-YTyIWp0Ha28HOGzw5WF",
+				name:     "bingo.txt",
+				isFolder: false,
+				err:      nil,
+			},
+		}, {
+			path: "how-to-brush-teeth.txt",
+			expected: expected{
+				dirId:    "root",
+				name:     "how-to-brush-teeth.txt",
+				isFolder: false,
+				err:      nil,
+			},
+		}, {
+			path: "how-to-brush-teeth.txt/",
+			expected: expected{
+				dirId:    "",
+				name:     "",
+				isFolder: true,
+				err:      ErrFolderDNE,
+			},
+		},
+	}
+
+	for _, c := range cases {
+		dirID, name, isFolder, err := config.ValidateUploadPath(c.path)
+		expectedErr := fmt.Errorf("%v: %s", ErrFolderDNE, c.path)
+		if err == nil {
+			expectedErr = err
+		}
+		if dirID != c.dirId {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %s\n Actual: %s",
+				c.path, c.dirId, dirID,
+			)
+		}
+		if name != c.name {
+			t.Errorf(
+				"Fail: case: %s\nExpected: [%s]\n Actual: [%s]",
+				c.path, c.name, name,
+			)
+		}
+		if isFolder != c.isFolder {
+			t.Errorf(
+				"Fail: case: %s\nExpected: %t \n Actual: %t",
+				c.path, c.isFolder, isFolder,
+			)
+		}
+		if err != c.err {
+			if c.err == nil && err == nil {
+				continue
+			}
+			if !errors.Is(err, c.err) {
+				t.Errorf(
+					"Fail: case: %s\nExpected: %v\n Actual: %v",
+					c.path,
+					expectedErr,
+					err,
+				)
+			}
+		}
+	}
 
 }
