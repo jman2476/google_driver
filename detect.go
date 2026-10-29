@@ -120,5 +120,25 @@ func (cfg apiConfig) ValidateUploadPath(path string) (
 		return
 	}
 
+	pathParts, err := ParsePath(path)
+	if err != nil {
+		return
+	}
+
+	idx := len(pathParts) - 1
+	name = pathParts[idx].Name
+	if len(pathParts) > 1 {
+		dirPath := JoinFolderNames(pathParts[:idx])
+		folder, err = cfg.findFolder(dirPath)
+		if err != nil {
+			err = fmt.Errorf("%w: %s", ErrFolderDNE, dirPath)
+			isFolder = false
+			return
+		}
+		dirID = folder.Id
+	} else {
+		dirID = "root"
+	}
+
 	return
 }

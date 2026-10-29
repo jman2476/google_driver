@@ -23,6 +23,15 @@ type DriveFolder struct {
 	Parent string
 }
 
+func JoinFolderNames(d []DriveFolder) string {
+	var names []string
+	for _, folder := range d {
+		names = append(names, folder.Name)
+	}
+
+	return strings.Join(names, "/")
+}
+
 func printDriveFolder(folders []DriveFolder) {
 	for _, f := range folders {
 		fmt.Printf("Name: %v, Parent: %v\n", f.Name, f.Parent)
