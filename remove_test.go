@@ -53,14 +53,19 @@ func TestRemoveFile(t *testing.T) {
 	}
 
 	for _, c := range cases {
+		targetName := genTimeStampFilename(c.basename, c.extension)
+		targetPath := strings.Join(
+			[]string{c.target, targetName},
+			"/",
+		)
 		config.in = c.in
-		_, err := config.uploadFile(c.path, c.target)
+		_, err := config.uploadFile(c.path, targetPath)
 		if err != nil {
 			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)
 		}
 
 		_, err = config.removeFile(
-			genTimeStampFilename(c.basename, c.extension), c.target)
+			targetName, c.target)
 		if err != nil {
 			t.Errorf("Fail case %s: error deleting file on drive: %v", c.path, err)
 		}
