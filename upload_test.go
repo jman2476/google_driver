@@ -97,6 +97,9 @@ func TestUploadFile(t *testing.T) {
 		}, {
 			path:   "./test_resources/goose_sqlc-instructions.txt",
 			target: "/test_folder/child_test_folder",
+		}, {
+			path:   "./test_resources/goose_sqlc-instructions.txt",
+			target: "/",
 		},
 	}
 
@@ -132,6 +135,10 @@ func TestUploadRenameFile(t *testing.T) {
 			path:       "./test_resources/goose_sqlc-instructions.txt",
 			targetDir:  "test_folder/child_test_folder",
 			targetName: "honk_honk_how_to.txt",
+		}, {
+			path:       "./test_resources/goose_sqlc-instructions.txt",
+			targetDir:  "",
+			targetName: "honk_honk_how_to.txt",
 		},
 	}
 
@@ -142,7 +149,7 @@ func TestUploadRenameFile(t *testing.T) {
 
 		file, err := config.uploadFile(c.path, targetPath)
 		if err != nil {
-			t.Errorf("Fail case %s: error uploading file to drive: %v", c.path, err)
+			t.Errorf("Fail case %s to %s: error uploading file to drive: %v", c.path, targetPath, err)
 		}
 
 		if file.Name != c.targetName {
