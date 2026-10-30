@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 	"testing"
 
 	"google.golang.org/api/drive/v3"
@@ -103,6 +104,49 @@ func TestUploadFile(t *testing.T) {
 		_, err = config.uploadFile(c.path, c.target)
 		if err != nil {
 			t.Errorf("Fail case %s: error creating file on drive: %v", c.path, err)
+		}
+	}
+}
+
+func TestUploadRenameFile(t *testing.T) {
+	var config apiConfig
+	err := config.setClient()
+	if err != nil {
+		log.Fatalf("Error setting client: %v\n", err)
+	}
+	err = config.setService()
+	if err != nil {
+		log.Fatalf("Error setting service: %v\n", err)
+	}
+
+	cases := []struct {
+		path       string
+		targetDir  string
+		targetName string
+	}{
+		{
+			path:       "./test_resources/bubbletea_gui.gif",
+			targetDir:  "test_folder",
+			targetName: "renamed_tea_gui.gif",
+		}, {
+			path:       "./test_resources/goose_sqlc-instructions.txt",
+			targetDir:  "test_folder/child_test_folder",
+			targetName: "honk_honk_how_to.txt",
+		},
+	}
+
+	for _, c := range cases {
+		targetPath := strings.Join(
+			[]string{c.targetDir, c.targetName}, "/",
+		)
+
+		file, err := config.uploadFile(c.path, targetPath)
+		if err != nil {
+			t.Errorf("Fail case %s: error uploading file to drive: %v", c.path, err)
+		}
+
+		if file.Name != c.targetName {
+			t.Errorf("Fail case %s: file not renamed on upload\nExpected: %s\nActual: %s", c.path, c.targetName, file.Name)
 		}
 	}
 }
