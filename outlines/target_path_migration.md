@@ -10,35 +10,35 @@ This checklist outlines the locations and logic across the codebase requiring fi
 
 - [X] `Lines 40-56` - Support explicit directory paths indicated by a trailing slash (e.g., specifying a folder destination where the file keeps its original filename).
 
-- [ ] `Lines 51-56`- Replace the period detection check on the final path segment (`strings.Contains(..., ".")`) with robust logic that can distinguish between a folder destination and a target filename.
+- [X] `Lines 51-56`- Replace the period detection check on the final path segment (`strings.Contains(..., ".")`) with robust logic that can distinguish between a folder destination and a target filename.
 
-- [ ] `Lines 51-56` - Handle destination folders that contain dots in their folder names so they are not misclassified as target filenames.
+- [X] `Lines 51-56` - Handle destination folders that contain dots in their folder names so they are not misclassified as target filenames.
 
-- [ ] `Lines 51-56` - Handle target filenames that have no file extension (such as documentation files, license files, or scripts) so they are recognized as file renames rather than directory names.
+- [X] `Lines 51-56` - Handle target filenames that have no file extension (such as documentation files, license files, or scripts) so they are recognized as file renames rather than directory names.
 
-- [ ] `Lines 51-66` - Resolve target paths where only a new filename is provided with no directory path (uploading into the root directory under a new name).
+- [X] `Lines 51-66` - Resolve target paths where only a new filename is provided with no directory path (uploading into the root directory under a new name).
 
-- [ ] ` Lines 58-66` - Implement destination resolution against Drive to determine whether the path refers to an existing folder before falling back to extracting a parent folder and new filename.
+- [X] ` Lines 58-66` - Implement destination resolution against Drive to determine whether the path refers to an existing folder before falling back to extracting a parent folder and new filename.
 
-- [ ] `Lines 58-76` - Set the extracted parent folder path and target filename variables appropriately so valid folder IDs are retrieved and passed into metadata creation.
+- [X] `Lines 58-76` - Set the extracted parent folder path and target filename variables appropriately so valid folder IDs are retrieved and passed into metadata creation.
 
 ---
 
 ### 2. File Metadata Construction (`upload.go`)
 
-- [ ] `Lines 12-27` - Verify that `writeUploadMetadata` uses the new target name when specified (lines 22-24), while preserving the original local filename (lines 13-16) when no rename is requested.
+- [X] `Lines 12-27` - Verify that `writeUploadMetadata` uses the new target name when specified (lines 22-24), while preserving the original local filename (lines 13-16) when no rename is requested.
 
-- [ ] `Lines 13-16` - Ensure that MIME type detection performed during file validation `detect.go:58-72` is retained on the Drive metadata even when uploading or renaming to a filename without an extension.
+- [X] `Lines 13-16` - Ensure that MIME type detection performed during file validation `detect.go:58-72` is retained on the Drive metadata even when uploading or renaming to a filename without an extension.
 
-- [ ] `Lines 18-20` - Ensure that parent folder ID assignment correctly targets the resolved parent folder ID (or root) regardless of whether a rename occurred.
+- [X] `Lines 18-20` - Ensure that parent folder ID assignment correctly targets the resolved parent folder ID (or root) regardless of whether a rename occurred.
 
 ---
 
 ### 3. Path Parsing Helpers (`directory.go`)
 
-- [ ] `Lines 32-55` - Verify that `ParsePath` handles single-segment inputs, empty inputs, and paths with trailing slashes without returning unexpected empty directory errors `directory.go:50-52`.
+- [X] `Lines 32-55` - Verify that `ParsePath` handles single-segment inputs, empty inputs, and paths with trailing slashes without returning unexpected empty directory errors `directory.go:50-52`.
 
-- [ ] `Lines 57-110` - Ensure `findFolder` can search and verify parent folders independently from trailing file components in a target path.
+- [X] `Lines 57-110` - Ensure `findFolder` can search and verify parent folders independently from trailing file components in a target path.
 
 ---
 
