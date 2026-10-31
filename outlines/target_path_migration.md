@@ -84,7 +84,7 @@ This checklist outlines the locations and logic across the codebase requiring fi
 
 ### 7. Left to Do
 
---[ ] `upload.go:49` - Uncomment the deferred file handle closure (`defer fileData.Reader.Close()`) right after file validation to prevent file descriptor leaks.
+--[X] `upload.go:49` - Uncomment the deferred file handle closure (`defer fileData.Reader.Close()`) right after file validation to prevent file descriptor leaks.
 --[ ] `upload.go:44-80` - Remove the legacy commented-out path parsing block in `uploadFile` now that `ValidateUploadPath` handles this logic.
 --[ ] `upload_test.go:11-40` & `upload_test.go:48` - Add test cases in `TestWriteUploadMetadata` that pass explicit non-empty `newName` arguments to verify that metadata renaming works at the unit level.
 --[ ] `upload_test.go:11-40` - Add a unit test case in `TestWriteUploadMetadata` for files without extensions (e.g., `LICENSE`) to verify that the filename and sniffed MIME type are preserved.

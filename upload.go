@@ -43,42 +43,6 @@ func (cfg *apiConfig) uploadFile(path string, targetPath string) (*drive.File, e
 	}
 	defer fileData.Reader.Close()
 
-	// targetId := "root"
-	// if targetPath == "" {
-	// 	targetPath = targetId
-	// }
-
-	// pathParts, err := ParsePath(targetPath)
-	// if err != nil {
-	// 	return nil, fmt.Errorf(
-	// 		"failed to parse target path: %w\n", err,
-	// 	)
-	// }
-	// var pathPartNames []string
-	// for _, p := range pathParts {
-	// 	pathPartNames = append(pathPartNames, p.Name)
-	// }
-
-	// var targetDir string
-	// var targetName string
-	// if lengthStr := len(targetPath); lengthStr > 0 && targetPath[lengthStr-1] == '/' {
-	// 	targetDir = strings.Join(pathPartNames, "/")
-	// 	targetName = fileData.Info.Name()
-	// } else if length := len(pathParts); strings.Contains(pathPartNames[length-1], ".") {
-	// 	targetDir = strings.Join(pathPartNames[:length-1], "/")
-	// 	targetName = pathPartNames[length-1]
-	// }
-
-	// target, err := cfg.findFolder(targetDir)
-	// if err != nil && err != ErrEmptyDir {
-	// 	return nil, fmt.Errorf(
-	// 		"failed to find target folder: %w\n", err,
-	// 	)
-	// }
-	// if target != nil {
-	// 	targetId = target.Id
-	// }
-
 	fmt.Printf("File size: %s\n\n", progress.FormatSize(fileData.Info.Size()))
 
 	progressTracker := &progress.Tracker{
