@@ -49,6 +49,14 @@ func TestWriteUploadMetadata(t *testing.T) {
 				Name:     "banana_time.mov",
 				MimeType: "video/quicktime",
 			},
+		}, {
+			path:           "./test_resources/LICENSE",
+			targetFolderID: "",
+			newName:        "",
+			expected: &drive.File{
+				Name:     "LICENSE",
+				MimeType: "text/plain; charset=utf-8",
+			},
 		},
 	}
 
