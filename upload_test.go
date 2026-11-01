@@ -168,6 +168,10 @@ func TestUploadRenameFile(t *testing.T) {
 			path:       "./test_resources/goose_sqlc-instructions.txt",
 			targetDir:  "",
 			targetName: "honk_honk_how_to.txt",
+		}, {
+			path:       "./test_resources/LICENSE",
+			targetDir:  "",
+			targetName: "YA_GOT_A_LOICENSE_MATE",
 		},
 	}
 

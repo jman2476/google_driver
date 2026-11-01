@@ -11,7 +11,7 @@ import (
 
 func genTimeStampFilename(base, ext string) string {
 	currTime := time.Now()
-	return fmt.Sprintf("%s-%v:%v%s", base, currTime.Hour(), currTime.Minute(), ext)
+	return fmt.Sprintf("%s-%v:%v.%s", base, currTime.Hour(), currTime.Minute(), ext)
 }
 
 func TestRemoveFile(t *testing.T) {
