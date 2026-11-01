@@ -14,7 +14,7 @@ func (cfg *apiConfig) commandHelp(command, _ string) (*drive.File, error) {
 
 	if command != "" {
 		msgWriter.Write([]byte(
-			formatHelp(command, cfg.commandRegistry()[command]),
+			formatHelpFull(command, cfg.commandRegistry()[command]),
 		))
 	} else {
 		for call, cmd := range cfg.commandRegistry() {
@@ -35,9 +35,23 @@ func formatHelp(call string, command cliCommand) string {
 			[]byte{},
 			"%s --> %s\n     %s\n",
 			call, command.name,
-			command.description,
+			command.use,
 		),
 	)
 
 	return strBuilder.String()
+}
+
+func formatHelpFull(call string, command cliCommand) string {
+	var msgBuilder strings.Builder
+	msgBuilder.Write([]byte(formatHelp(call, command)))
+	msgBuilder.Write(
+		fmt.Appendf(
+			[]byte{},
+			"\n%s\n",
+			command.description,
+		),
+	)
+
+	return msgBuilder.String()
 }

@@ -4,6 +4,7 @@ import "google.golang.org/api/drive/v3"
 
 type cliCommand struct {
 	name        string
+	use         string
 	description string
 	callback    func(string, string) (*drive.File, error)
 }
@@ -11,44 +12,44 @@ type cliCommand struct {
 func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 	return map[string]cliCommand{
 		"ls": {
-			name:        "List directory",
-			description: "List contents of the given directory",
-			callback:    cfg.commandList,
+			name:     "List directory",
+			use:      "List contents of the given directory",
+			callback: cfg.commandList,
 		},
 		"rm": {
-			name:        "Remove",
-			description: "Remove/delete a file or directory",
-			callback:    cfg.commandRemove,
+			name:     "Remove",
+			use:      "Remove/delete a file or directory",
+			callback: cfg.commandRemove,
 		},
 		"mv": {
-			name:        "Move",
-			description: "Upload file to your Google Drive",
-			callback:    cfg.uploadFile,
+			name:     "Move",
+			use:      "Upload file to your Google Drive",
+			callback: cfg.uploadFile,
 		},
 		"mkdir": {
-			name:        "Make directory",
-			description: "make new directory on your Google Drive",
-			callback:    cfg.createFolder,
+			name:     "Make directory",
+			use:      "make new directory on your Google Drive",
+			callback: cfg.createFolder,
 		},
 		"login": {
-			name:        "Log In",
-			description: "Log into your Google account",
-			callback:    cfg.commandLogIn,
+			name:     "Log In",
+			use:      "Log into your Google account",
+			callback: cfg.commandLogIn,
 		},
 		"logout": {
-			name:        "Log Out",
-			description: "Log out of your Google account",
-			callback:    cfg.commandLogOut,
+			name:     "Log Out",
+			use:      "Log out of your Google account",
+			callback: cfg.commandLogOut,
 		},
 		"account": {
-			name:        "Account details",
-			description: "Get current account",
-			callback:    cfg.commandAccount,
+			name:     "Account details",
+			use:      "Get current account",
+			callback: cfg.commandAccount,
 		},
 		"help": {
-			name:        "Help menu",
-			description: "Display help information",
-			callback:    cfg.commandHelp,
+			name:     "Help menu",
+			use:      "Display help information",
+			callback: cfg.commandHelp,
 		},
 	}
 }
