@@ -22,9 +22,10 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 			callback: cfg.commandRemove,
 		},
 		"mv": {
-			name:     "Move",
-			use:      "Upload file to your Google Drive",
-			callback: cfg.uploadFile,
+			name:        "Move",
+			use:         "Upload file to your Google Drive",
+			description: "mv <file source> <drive target>\n    *drive target can be a folder on your drive and/or a new file name. If target folder is omitted, file will be uploaded to root directory on drive",
+			callback:    cfg.uploadFile,
 		},
 		"mkdir": {
 			name:     "Make directory",
