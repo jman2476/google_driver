@@ -128,7 +128,7 @@ func TestUploadFile(t *testing.T) {
 			target: "/test_folder/child_test_folder",
 		}, {
 			path:   "./test_resources/goose_sqlc-instructions.txt",
-			target: "/",
+			target: "",
 		},
 	}
 
