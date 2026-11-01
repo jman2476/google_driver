@@ -10,32 +10,44 @@ import (
 
 func TestWriteUploadMetadata(t *testing.T) {
 	cases := []struct {
-		path         string
-		targetFolder string
-		expected     *drive.File
+		path           string
+		targetFolderID string
+		newName        string
+		expected       *drive.File
 	}{
 		{
-			path:         "./test_resources/bubbletea_gui.gif",
-			targetFolder: "test_folder",
+			path:           "./test_resources/bubbletea_gui.gif",
+			targetFolderID: "test_folder",
+			newName:        "",
 			expected: &drive.File{
 				Name:     "bubbletea_gui.gif",
 				MimeType: "image/gif",
 				Parents:  []string{"test_folder"},
 			},
 		}, {
-			path:         "./test_resources/chess.mov",
-			targetFolder: "",
+			path:           "./test_resources/chess.mov",
+			targetFolderID: "",
+			newName:        "",
 			expected: &drive.File{
 				Name:     "chess.mov",
 				MimeType: "video/quicktime",
 			},
 		}, {
-			path:         "./test_resources/goose_sqlc-instructions.txt",
-			targetFolder: "child_test_folder",
+			path:           "./test_resources/goose_sqlc-instructions.txt",
+			targetFolderID: "child_test_folder",
+			newName:        "",
 			expected: &drive.File{
 				Name:     "goose_sqlc-instructions.txt",
 				MimeType: "text/plain; charset=utf-8",
 				Parents:  []string{"child_test_folder"},
+			},
+		}, {
+			path:           "./test_resources/chess.mov",
+			targetFolderID: "",
+			newName:        "banana_time.mov",
+			expected: &drive.File{
+				Name:     "banana_time.mov",
+				MimeType: "video/quicktime",
 			},
 		},
 	}
@@ -46,7 +58,7 @@ func TestWriteUploadMetadata(t *testing.T) {
 			t.Errorf("Fail: unable to validate file: %v\n", err)
 		}
 
-		filePointer := writeUploadMetadata(fileData, c.targetFolder, "")
+		filePointer := writeUploadMetadata(fileData, c.targetFolderID, c.newName)
 
 		if filePointer.Name != c.expected.Name {
 			t.Errorf(
@@ -65,11 +77,20 @@ func TestWriteUploadMetadata(t *testing.T) {
 		}
 
 		t.Logf("Expected parents: %v\nActual parents: %v", c.expected.Parents, filePointer.Parents)
-		if c.targetFolder != "" && filePointer.Parents[0] != c.expected.Parents[0] {
+		if c.targetFolderID != "" && filePointer.Parents[0] != c.expected.Parents[0] {
 			t.Errorf(
 				"Fail: drive.File.Parents does not match expected:\nExpected: %v\nActual: %v\n",
 				c.expected.Parents[0],
 				filePointer.Parents[0],
+			)
+		}
+
+		if c.newName != "" && c.expected.Name != filePointer.Name {
+			t.Errorf(
+				"Fail: drive.File.Name does not match expected:\nCase: %s\nExpected: %s\nActual: %s\n",
+				c.path,
+				c.expected.Name,
+				filePointer.Name,
 			)
 		}
 	}
