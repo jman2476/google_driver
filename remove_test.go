@@ -11,7 +11,21 @@ import (
 
 func genTimeStampFilename(base, ext string) string {
 	currTime := time.Now()
-	return fmt.Sprintf("%s-%v:%v.%s", base, currTime.Hour(), currTime.Minute(), ext)
+	if ext == "" {
+		return fmt.Sprintf(
+			"%s-%v:%v",
+			base,
+			currTime.Hour(),
+			currTime.Minute(),
+		)
+	}
+	return fmt.Sprintf(
+		"%s-%v:%v.%s",
+		base,
+		currTime.Hour(),
+		currTime.Minute(),
+		ext,
+	)
 }
 
 func TestRemoveFile(t *testing.T) {
@@ -48,6 +62,12 @@ func TestRemoveFile(t *testing.T) {
 			target:    "/test_folder/child_test_folder",
 			basename:  "goose_sqlc-instructions_for_delete.txt",
 			extension: "txt",
+			in:        strings.NewReader("y\ny\n"),
+		}, {
+			path:      "./test_resources/LICENSE",
+			target:    "/test_folder/child_test_folder",
+			basename:  "LICENSE",
+			extension: "",
 			in:        strings.NewReader("y\ny\n"),
 		},
 	}
