@@ -11,3 +11,8 @@ type Arguments struct {
 	TargetPath string
 	Flags      []FlagArg
 }
+
+func ParseFlags(args []string) Arguments {
+
+	return Arguments{}
+}
