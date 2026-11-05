@@ -12,7 +12,7 @@ type Arguments struct {
 	Flags      []FlagArg
 }
 
-func ParseFlags(args []string) Arguments {
+func ParseFlags(args []string) (parsed Arguments) {
 
 	return Arguments{}
 }
