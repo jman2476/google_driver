@@ -55,3 +55,35 @@ func PrintParsed(parsed Arguments) {
 		fmt.Println(f)
 	}
 }
+
+func parseList() {
+
+}
+
+func parseRemove() {
+
+}
+
+func parseMove() {
+
+}
+
+func parseMkDir() {
+
+}
+
+func parseLogin() {
+
+}
+
+func parseLogout() {
+
+}
+
+func parseAccount() {
+
+}
+
+func parseHelp() {
+
+}
