@@ -104,43 +104,6 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 		}
 
 	}
-
-	// for valid := true; valid; {
-	// 	fmt.Print(message)
-	// 	scanner.Scan()
-
-	// 	if err = scanner.Err(); err != nil {
-	// 		return nil, fmt.Errorf(
-	// 			"error reading input: %w", err,
-	// 		)
-	// 	}
-
-	// 	result := scanner.Text()
-	// 	if len(result) > 1 ||
-	// 		len(result) < 1 ||
-	// 		!slices.Contains([]string{"y", "n", "Y", "N"}, result) {
-	// 		fmt.Println("please reply (y/n)")
-	// 		continue
-	// 	} else if slices.Contains([]string{"n", "N"}, result) {
-	// 		return nil, ErrRemoveCanceled
-	// 	} else {
-	// 		valid = false
-	// 	}
-	// }
-	// if fileType == "folder" {
-	// 	message = "If you delete this folder, all contents will be deleted as well. Continue? (y/n)   "
-
-	// 	for valid := true; valid; {
-	// 		fmt.Print(message)
-	// 		scanner.Scan()
-
-	// 		if err = scanner.Err(); err != nil {
-	// 			return nil, fmt.Errorf(
-	// 				"error reading input: %w", err,
-	// 			)
-	// 		}
-
-	// 		result := scanner.Text()
 	// 		if len(result) > 1 ||
 	// 			len(result) < 1 ||
 	// 			!slices.Contains([]string{"y", "n", "Y", "N"}, result) {

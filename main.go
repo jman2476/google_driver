@@ -80,14 +80,4 @@ func main() {
 		os.Exit(0)
 	}
 
-	// about, err := config.service.About.Get().Fields("user").Do()
-	// if err != nil {
-	// 	log.Fatalf("Drive API check failed: %v", err)
-	// }
-
-	// fmt.Printf(
-	// 	"Authenticated successfully as %s (%s)\n",
-	// 	about.User.DisplayName,
-	// 	about.User.EmailAddress,
-	// )
 }
