@@ -12,11 +12,20 @@ func TestParse(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			input:    "",
-			expected: arguments{},
+			input: "google_driver mv ./test_resources/chess.mov /test_folder",
+			expected: arguments{
+				tool:   "mv",
+				source: "./test_resources/chess.mov",
+				target: "/test_folder/",
+			},
+			expectedErr: nil,
 		}, {
-			input:    "",
-			expected: arguments{},
+			input: "google_driver rm /test_folder/chess.mov -y -y",
+			expected: arguments{
+				tool:   "rm",
+				source: "/test_folder/chess.mov",
+				target: "/test_folder",
+			},
 		},
 	}
 

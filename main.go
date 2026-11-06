@@ -62,6 +62,8 @@ func main() {
 			os.Exit(1)
 		}
 
+		config.in = os.Stdin
+
 		fmt.Println("Google Drive service initialized")
 		tool := config.commandRegistry()[args.tool]
 		file, err := tool.callback(args.source, args.target)
