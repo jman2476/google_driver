@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 )
 
 var (
@@ -11,6 +12,7 @@ var (
 
 func parseArgs(args []string) (
 	parsed arguments, err error) {
+	printParse(args)
 	switch len(args) {
 	case 1:
 		err = ErrMissingArgs
@@ -28,4 +30,10 @@ func parseArgs(args []string) (
 	}
 
 	return
+}
+
+func printParse(args []string) {
+	for i, a := range args {
+		fmt.Printf("%d: %s\n", i, a)
+	}
 }
