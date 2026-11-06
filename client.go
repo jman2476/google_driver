@@ -21,17 +21,6 @@ func (cfg *apiConfig) setClient() error {
 	if err != nil {
 		return fmt.Errorf(
 			"no token found: %w\n please log in\n", err)
-		// fmt.Println("No token found. Initiating authorization.")
-
-		// authCode, err := auth.GetAuthorization(config)
-		// if err != nil {
-		// 	return fmt.Errorf("unable to authorize: %w", err)
-		// }
-
-		// token, err = auth.GetToken(config, authCode)
-		// if err != nil {
-		// 	return fmt.Errorf("Error getting token: %w", err)
-		// }
 	}
 
 	cfg.client = config.Client(context.Background(), token)
