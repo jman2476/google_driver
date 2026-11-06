@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jman2476/google-driver/internal/argparser"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/drive/v3"
 )
@@ -26,8 +25,6 @@ type arguments struct {
 
 func main() {
 	var config apiConfig
-
-	_ = argparser.ParseFlags(os.Args)
 
 	args, err := parseArgs(os.Args)
 	if err != nil {
