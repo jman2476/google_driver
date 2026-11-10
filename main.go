@@ -17,12 +17,6 @@ type apiConfig struct {
 	in      io.Reader
 }
 
-type arguments struct {
-	tool   string
-	source string
-	target string
-}
-
 func main() {
 	var config apiConfig
 
