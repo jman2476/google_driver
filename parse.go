@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+type arguments struct {
+	tool   string
+	source string
+	target string
+}
+
 var (
 	ErrMissingArgs = errors.New("not enough arguments")
 	ErrTooManyArgs = errors.New("too many arguments")
