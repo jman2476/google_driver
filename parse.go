@@ -8,8 +8,6 @@ import (
 
 type arguments struct {
 	tool       string
-	source     string
-	target     string
 	positional []string
 	flags      map[string]string
 }
