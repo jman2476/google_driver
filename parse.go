@@ -20,6 +20,25 @@ var (
 	ErrTooManyArgs = errors.New("too many arguments")
 )
 
+func (a arguments) HasFlag(names ...string) bool {
+	for _, name := range names {
+		if _, ok := a.flags[name]; ok {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (a arguments) GetFlag(names ...string) string {
+	for _, name := range names {
+		if val, ok := a.flags[name]; ok {
+			return val
+		}
+	}
+	return ""
+}
+
 func parseArgs(rawArgs []string) (arguments, error) {
 	printParse(rawArgs)
 	if len(rawArgs) < 2 {
