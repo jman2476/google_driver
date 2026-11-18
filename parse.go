@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 type arguments struct {
@@ -19,28 +20,42 @@ var (
 	ErrTooManyArgs = errors.New("too many arguments")
 )
 
-func parseArgs(rawArgs []string) (
-	parsed arguments, err error) {
+func parseArgs(rawArgs []string) (arguments, error) {
 	printParse(rawArgs)
 	if len(rawArgs) < 2 {
-		return parsed, ErrMissingCmd
+		return arguments{}, ErrMissingCmd
 	}
 
-	switch len(rawArgs) {
-	case 2:
-		parsed.tool = rawArgs[1]
-	case 3:
-		parsed.tool = rawArgs[1]
-		parsed.source = rawArgs[2]
-	case 4:
-		parsed.tool = rawArgs[1]
-		parsed.source = rawArgs[2]
-		parsed.target = rawArgs[3]
-	default:
-		err = ErrTooManyArgs
+	parsed := arguments{
+		tool:  rawArgs[1],
+		flags: make(map[string]string),
 	}
 
-	return
+	args := rawArgs[2:]
+	for i := 0; i < len(args); i++ {
+		token := args[i]
+
+		if strings.HasPrefix(token, "-") {
+			flagName := strings.TrimLeft(token, "-")
+
+			if strings.Contains(flagName, "=") {
+				parts := strings.SplitN(flagName, "=", 2)
+				parsed.flags[parts[0]] = parts[1]
+				continue
+			}
+
+			if i+1 < len(args) && !strings.HasPrefix(args[i+1], "-") {
+				parsed.flags[flagName] = args[i+1]
+			} else {
+				parsed.flags[flagName] = "true"
+			}
+			continue
+		}
+
+		parsed.positional = append(parsed.positional, token)
+	}
+
+	return parsed, nil
 }
 
 func printParse(args []string) {
