@@ -118,7 +118,7 @@ func (cfg *apiConfig) findFolder(path string) (*drive.File, error) {
 	return currentFolder, nil
 }
 
-func (cfg *apiConfig) createFolder(path string, _ string) (*drive.File, error) {
+func (cfg *apiConfig) createFolder(path string) (*drive.File, error) {
 	folders, err := ParsePath(path)
 	if err != nil && err != ErrEmptyDir {
 		return nil, fmt.Errorf(

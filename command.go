@@ -35,7 +35,7 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 		"mkdir": {
 			name:     "Make directory",
 			use:      "make new directory on your Google Drive",
-			callback: cfg.createFolder,
+			callback: cfg.commandCreateFolder,
 		},
 		"login": {
 			name:     "Log In",
