@@ -6,7 +6,7 @@ type cliCommand struct {
 	name        string
 	use         string
 	description string
-	callback    func(string, string) (*drive.File, error)
+	callback    func(arguments) (*drive.File, error)
 }
 
 func (cfg *apiConfig) commandRegistry() map[string]cliCommand {

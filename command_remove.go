@@ -6,7 +6,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandRemove(filepath, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandRemove(args arguments) (*drive.File, error) {
 	lastSlashIdx := strings.LastIndex(filepath, "/")
 	var folderpath string
 	var filename string

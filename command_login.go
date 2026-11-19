@@ -8,7 +8,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandLogIn(_, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandLogIn(_ arguments) (*drive.File, error) {
 	config, err := auth.LoadCredentials()
 	if err != nil {
 		return nil, fmt.Errorf("unable to load credentials: %w\n", err)

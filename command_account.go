@@ -6,7 +6,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandAccount(_, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandAccount(_ arguments) (*drive.File, error) {
 	about, err := cfg.service.About.Get().Fields("user").Do()
 	if err != nil {
 		return nil, fmt.Errorf("unable to get current account: %w", err)

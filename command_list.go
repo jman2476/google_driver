@@ -7,7 +7,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandList(targetDir, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandList(args arguments) (*drive.File, error) {
 	target, err := cfg.findFolder(targetDir)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to find folder: %w", err)

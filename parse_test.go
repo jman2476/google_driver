@@ -14,17 +14,16 @@ func TestParse(t *testing.T) {
 		{
 			input: "google_driver mv ./test_resources/chess.mov /test_folder",
 			expected: arguments{
-				tool:   "mv",
-				source: "./test_resources/chess.mov",
-				target: "/test_folder/",
+				tool:       "mv",
+				positional: []string{"./test_resources/chess.mov", "/test_folder/"},
 			},
 			expectedErr: nil,
 		}, {
 			input: "google_driver rm /test_folder/chess.mov -y -y",
 			expected: arguments{
-				tool:   "rm",
-				source: "/test_folder/chess.mov",
-				target: "/test_folder",
+				tool:       "rm",
+				positional: []string{"/test_folder/chess.mov"},
+				flags:      map[string]string{"y": "true"},
 			},
 		},
 	}
@@ -42,13 +41,24 @@ func TestParse(t *testing.T) {
 			)
 		}
 
-		if parsed.source != c.expected.source {
-			t.Errorf(
-				"Fail: source does not match expected\nCase: [%s]\nExpected: %v\nActual: %v\n",
+		if len(parsed.positional) != len(c.expected.positional) {
+			t.Errorf("Fail: incorrect number of positional arguments\nCase: %s\nExpected: %d\nActual: %d\n",
 				c.input,
-				c.expected.source,
-				parsed.source,
+				len(c.expected.positional),
+				len(parsed.positional),
 			)
+		} else {
+			for i, p := range parsed.positional {
+				if p != c.expected.positional[i] {
+					t.Errorf(
+						"Fail: positional arguments don't match expected\nCase: %s\nExpected: %v\nActual: %v\n",
+						c.input,
+						c.expected.positional,
+						parsed.positional,
+					)
+					break
+				}
+			}
 		}
 
 		if parsed.tool != c.expected.tool {
@@ -59,13 +69,33 @@ func TestParse(t *testing.T) {
 				parsed.tool,
 			)
 		}
-		if parsed.target != c.expected.target {
+
+		if len(parsed.flags) != len(c.expected.flags) {
 			t.Errorf(
-				"Fail: target does not match expected\nCase: [%s]\nExpected: %v\nActual: %v\n",
+				"Fail: incorrect number of flags\nCase: %s\nExpected: %d\nActual: %d\n",
 				c.input,
-				c.expected.target,
-				parsed.target,
+				len(c.expected.flags),
+				len(parsed.flags),
 			)
+		} else {
+			for key, val := range parsed.flags {
+				eVal, ok := c.expected.flags[key]
+				if !ok {
+					t.Errorf(
+						"Fail: unexpected flag found: %s\nCase: %s\nExpected: none",
+						val, c.input,
+					)
+					break
+				}
+				if val != eVal {
+					t.Errorf(
+						"Fail: value for flag %s not consistent\nCase: %s\nExpected: %s\nActual: %s\n",
+						key, c.input,
+						eVal, val,
+					)
+					break
+				}
+			}
 		}
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-func (cfg *apiConfig) commandHelp(command, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandHelp(args arguments) (*drive.File, error) {
 	helpMessage := "call 'help <command name>' to get information on a specific command\n"
 	var msgWriter strings.Builder
 	msgWriter.Write([]byte(helpMessage))
