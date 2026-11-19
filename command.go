@@ -25,7 +25,12 @@ func (cfg *apiConfig) commandRegistry() map[string]cliCommand {
 			name:        "Move",
 			use:         "Upload file to your Google Drive",
 			description: "mv <file source> <drive target>\n    *drive target can be a folder on your drive and/or a new file name. If target folder is omitted, file will be uploaded to root directory on drive",
-			callback:    cfg.uploadFile,
+			callback:    cfg.commandMove,
+		},
+		"dl": {
+			name:     "Download",
+			use:      "Download a file or directory. Use the -r flag for recursive downloads",
+			callback: cfg.commandDownload,
 		},
 		"mkdir": {
 			name:     "Make directory",
