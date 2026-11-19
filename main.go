@@ -28,7 +28,7 @@ func main() {
 
 	switch args.tool {
 	case "login":
-		_, err := config.commandLogIn(args.source, args.target)
+		_, err := config.commandLogIn(args)
 		if err != nil {
 			fmt.Printf("Log in error: %v\n", err)
 			os.Exit(1)
@@ -36,7 +36,7 @@ func main() {
 		fmt.Printf("Successfully logged in\n")
 		os.Exit(0)
 	case "logout":
-		_, err := config.commandLogOut(args.source, args.target)
+		_, err := config.commandLogOut(args)
 		if err != nil {
 			fmt.Printf("Log out error: %v\n", err)
 			os.Exit(1)
@@ -60,7 +60,7 @@ func main() {
 
 		fmt.Println("Google Drive service initialized")
 		tool := config.commandRegistry()[args.tool]
-		file, err := tool.callback(args.source, args.target)
+		file, err := tool.callback(args)
 		if err != nil {
 			fmt.Printf("%s error: %v\n", tool.name, err)
 			os.Exit(1)

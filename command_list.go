@@ -8,6 +8,17 @@ import (
 )
 
 func (cfg *apiConfig) commandList(args arguments) (*drive.File, error) {
+	var targetDir string
+
+	switch len(args.positional) {
+	case 0:
+		return nil, ErrMissingArgs
+	case 1:
+		targetDir = args.positional[0]
+	default:
+		return nil, ErrTooManyArgs
+	}
+
 	target, err := cfg.findFolder(targetDir)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to find folder: %w", err)

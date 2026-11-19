@@ -35,6 +35,6 @@ func (cfg *apiConfig) commandLogIn(_ arguments) (*drive.File, error) {
 	return nil, nil
 }
 
-func (cfg *apiConfig) commandLogOut(_, _ string) (*drive.File, error) {
+func (cfg *apiConfig) commandLogOut(_ arguments) (*drive.File, error) {
 	return nil, cfg.eraseTokenCache()
 }
