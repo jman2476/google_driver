@@ -12,16 +12,17 @@ func (cfg *apiConfig) commandHelp(args arguments) (*drive.File, error) {
 	var msgWriter strings.Builder
 	msgWriter.Write([]byte(helpMessage))
 
-	if command != "" {
-		msgWriter.Write([]byte(
-			formatHelpFull(command, cfg.commandRegistry()[command]),
-		))
-	} else {
+	if len(args.positional) == 0 {
 		for call, cmd := range cfg.commandRegistry() {
 			msgWriter.Write([]byte(
 				formatHelp(call, cmd),
 			))
 		}
+	} else {
+		command := args.positional[0]
+		msgWriter.Write([]byte(
+			formatHelpFull(command, cfg.commandRegistry()[command]),
+		))
 	}
 
 	fmt.Println(msgWriter.String())
