@@ -1,9 +1,14 @@
 package main
 
-import "google.golang.org/api/drive/v3"
+import (
+	"errors"
+	"fmt"
+
+	"google.golang.org/api/drive/v3"
+)
 
 var (
-	ErrNeedRecursive = error.New("to download a folder, use the '-r' flag")
+	ErrNeedRecursive = errors.New("to download a folder, use the '-r' flag")
 )
 
 func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[string]string) (*drive.File, error) {
@@ -20,10 +25,14 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		return nil, ErrNeedRecursive
 	}
 	// if exists, download file
+	// use drive.FileDownloadCall
+
+	fmt.Println(dirId, filename)
 
 	return nil, nil
 }
 
 func (cfg *apiConfig) downloadFolder(path string, targetPath string, flags map[string]string) (*drive.File, error) {
 
+	return nil, nil
 }
