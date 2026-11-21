@@ -12,5 +12,5 @@ func (cfg *apiConfig) commandDownload(args arguments) (*drive.File, error) {
 
 	}
 
-	return cfg.downloadFile(source, target)
+	return cfg.downloadFile(source, target, args.flags)
 }

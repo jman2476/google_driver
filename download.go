@@ -17,7 +17,7 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		if _, ok := flags["r"]; ok {
 			return cfg.downloadFolder(path, targetPath, flags)
 		}
-		return nil, 
+		return nil, ErrNeedRecursive
 	}
 	// if exists, download file
 
