@@ -15,7 +15,7 @@ func TestParse(t *testing.T) {
 			input: "google_driver mv ./test_resources/chess.mov /test_folder",
 			expected: arguments{
 				tool:       "mv",
-				positional: []string{"./test_resources/chess.mov", "/test_folder/"},
+				positional: []string{"./test_resources/chess.mov", "/test_folder"},
 			},
 			expectedErr: nil,
 		}, {
