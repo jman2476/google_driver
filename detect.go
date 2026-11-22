@@ -90,7 +90,7 @@ func ValidateFile(path string) (file FileData, err error) {
 // 4-
 // 5-
 // 6-
-func (cfg apiConfig) ValidateUploadPath(path string) (
+func (cfg apiConfig) ValidateDrivePath(path string) (
 	dirID,
 	name string,
 	isFolder bool,

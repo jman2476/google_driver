@@ -254,7 +254,7 @@ func TestValidateUnreadableFile(t *testing.T) {
 
 }
 
-func TestValidateUploadPathRoot(t *testing.T) {
+func TestValidateDrivePathRoot(t *testing.T) {
 	var config apiConfig
 	err := config.setClient()
 	if err != nil {
@@ -275,7 +275,7 @@ func TestValidateUploadPathRoot(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		dirID, name, isFolder, err := config.ValidateUploadPath(c)
+		dirID, name, isFolder, err := config.ValidateDrivePath(c)
 
 		if dirID != "root" {
 			t.Errorf(
@@ -304,7 +304,7 @@ func TestValidateUploadPathRoot(t *testing.T) {
 	}
 }
 
-func TestValidateUploadPathIsFolder(t *testing.T) {
+func TestValidateDrivePathIsFolder(t *testing.T) {
 	var config apiConfig
 	err := config.setClient()
 	if err != nil {
@@ -395,7 +395,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		dirID, name, isFolder, err := config.ValidateUploadPath(c.path)
+		dirID, name, isFolder, err := config.ValidateDrivePath(c.path)
 		expectedErr := fmt.Errorf("%v: %s", ErrFolderDNE, c.path)
 		if err == nil {
 			expectedErr = err
@@ -434,7 +434,7 @@ func TestValidateUploadPathIsFolder(t *testing.T) {
 	}
 }
 
-func TestValidateUploadPathIsFile(t *testing.T) {
+func TestValidateDrivePathIsFile(t *testing.T) {
 	var config apiConfig
 	err := config.setClient()
 	if err != nil {
@@ -485,7 +485,7 @@ func TestValidateUploadPathIsFile(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		dirID, name, isFolder, err := config.ValidateUploadPath(c.path)
+		dirID, name, isFolder, err := config.ValidateDrivePath(c.path)
 		expectedErr := fmt.Errorf("%v: %s", ErrFolderDNE, c.path)
 		if err == nil {
 			expectedErr = err

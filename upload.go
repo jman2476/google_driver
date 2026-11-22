@@ -34,7 +34,7 @@ func (cfg *apiConfig) uploadFile(path string, targetPath string) (*drive.File, e
 		)
 	}
 
-	targetId, targetName, _, err := cfg.ValidateUploadPath(targetPath)
+	targetId, targetName, _, err := cfg.ValidateDrivePath(targetPath)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"bad target path: %v\n",

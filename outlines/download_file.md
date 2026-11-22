@@ -12,7 +12,7 @@
 
 ### High-Level Download Flow
 
-* Resolve the Drive path into a parent directory ID and filename using existing path utilities (`ValidateUploadPath`).
+* Resolve the Drive path into a parent directory ID and filename using existing path utilities (`ValidateDrivePath`).
 * Query Drive to locate the specific file and retrieve its file ID and metadata.
 * Validate the OAuth token before initiating any network request.
 * Use the file ID to request a media stream from the Drive API.

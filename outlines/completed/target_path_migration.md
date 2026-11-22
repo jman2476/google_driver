@@ -85,7 +85,7 @@ This checklist outlines the locations and logic across the codebase requiring fi
 ### 7. Left to Do
 
 --[X] `upload.go:49` - Uncomment the deferred file handle closure (`defer fileData.Reader.Close()`) right after file validation to prevent file descriptor leaks.
---[X] `upload.go:44-80` - Remove the legacy commented-out path parsing block in `uploadFile` now that `ValidateUploadPath` handles this logic.
+--[X] `upload.go:44-80` - Remove the legacy commented-out path parsing block in `uploadFile` now that `ValidateDrivePath` handles this logic.
 --[X] `upload_test.go:11-40` & `upload_test.go:48` - Add test cases in `TestWriteUploadMetadata` that pass explicit non-empty `newName` arguments to verify that metadata renaming works at the unit level.
 --[X] `upload_test.go:11-40` - Add a unit test case in `TestWriteUploadMetadata` for files without extensions (e.g., `LICENSE`) to verify that the filename and sniffed MIME type are preserved.
 --[X] `upload_test.go:122-152` - Add a test case to `TestUploadRenameFile` for uploading and renaming directly into the Drive root folder (a target path with a new filename and no folder path).
@@ -93,5 +93,5 @@ This checklist outlines the locations and logic across the codebase requiring fi
 --[X] `remove_test.go:12-15` - Fix `genTimeStampFilename` to include a dot before the file extension string so generated filenames have proper dot separation.
 --[X] `remove_test.go:33-53` - Add a test case in `TestRemoveFile` for uploading and deleting a file that has no file extension.
 --[X] `command.go:25` & `command_help.go:31-43` - Update the user-facing command description and help documentation for the `mv` command to clarify that target paths can specify either a folder destination or a new filename.
---[X] `target_path_migration.md:13-24` - Update checkboxes for Section 1 items to checked (`- [X]`) since `ValidateUploadPath` in `detect.go` successfully implements and passes all path disambiguation requirements.
+--[X] `target_path_migration.md:13-24` - Update checkboxes for Section 1 items to checked (`- [X]`) since `ValidateDrivePath` in `detect.go` successfully implements and passes all path disambiguation requirements.
 
