@@ -25,7 +25,14 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		return nil, ErrNeedRecursive
 	}
 	// if exists, download file
-	// use drive.FileDownloadCall
+	// query drive for file
+	// 		- get Id, get metadata
+	// use service.Files.Get(fileId).Download() to get data
+	// check for targetPath location
+	// if targetPath doesn't exist
+	//		- write file at current directory
+	// else
+	//		- write file at target directory
 
 	fmt.Println(dirId, filename)
 
