@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	ErrFileNotFound      = errors.New("File delete: file not found")
-	ErrTooManyFilesFound = errors.New(
+	ErrFileNotFoundDelete = errors.New("File delete: file not found")
+	ErrTooManyFilesFound  = errors.New(
 		"File delete: more than one file found with same name",
 	)
 	ErrRemoveCanceled = errors.New("File delete: user canceled")
@@ -43,7 +43,7 @@ func (cfg *apiConfig) removeFile(fileName, targetDir string) (*drive.File, error
 
 	if len(res.Files) == 0 {
 		return nil, fmt.Errorf(
-			"%w: %s", ErrFileNotFound, fileName,
+			"%w: %s", ErrFileNotFoundDelete, fileName,
 		)
 	}
 
