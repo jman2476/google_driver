@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"google.golang.org/api/drive/v3"
 )
@@ -60,9 +61,25 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 			res.StatusCode, err,
 		)
 	}
+	defer res.Body.Close()
 
 	// check for targetPath location
+	pwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("cannot read current directory: %w", err)
+	}
+	defer os.Chdir(pwd)
 	// if targetPath doesn't exist
+	err = os.Chdir(targetPath)
+	if err != nil {
+		fmt.Printf(
+			"Target directory %s not found, writing to %s instead",
+			targetPath, pwd,
+		)
+	}
+
+	fmt.Printf("")
+
 	//		- write file at current directory
 	// else
 	//		- write file at target directory
