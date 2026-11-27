@@ -135,7 +135,7 @@ func (cfg *apiConfig) multiFilePrompt(filename string) (bool, error) {
 	result := scanner.Text()
 
 	if result != "y" && result != "Y" {
-		fmt.Println("Cancelling operation.")
+		fmt.Println("Canceling operation.")
 		return false, nil
 	}
 

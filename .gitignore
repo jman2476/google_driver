@@ -38,3 +38,6 @@ token.json
 
 # Large testing files
 test_resources/gui_example.mov
+
+# Download target directory
+test_resources/download_target/*
