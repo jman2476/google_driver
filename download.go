@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"path/filepath"
 
 	"google.golang.org/api/drive/v3"
 )
@@ -20,6 +23,8 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(path, targetPath)
+	fmt.Println(dirId, filename, isFolder, err)
 
 	if isFolder {
 		if _, ok := flags["r"]; ok {
@@ -49,7 +54,10 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		return nil, ErrFileNotFound
 	}
 	if len(files.Files) > 1 {
-		return nil, ErrDuplicateFilesFound
+		cont, err := cfg.multiFilePrompt(filename)
+		if err != nil || !cont {
+			return nil, ErrDuplicateFilesFound
+		}
 	}
 
 	fileId := files.Files[0].Id
@@ -78,13 +86,41 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		)
 	}
 
-	fmt.Printf("")
-
 	//		- write file at current directory
 	// else
 	//		- write file at target directory
 
-	fmt.Println(dirId, filename)
+	currDir, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"cannot read current directory after deciding download location: %w", err,
+		)
+	}
+
+	destPath := filepath.Join(currDir, filename)
+	outFile, err := os.Create(destPath)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to create local file at %s: %w",
+			destPath, err,
+		)
+	}
+	defer outFile.Close()
+
+	written, err := io.Copy(outFile, res.Body)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to write to local file at %s: %w",
+			destPath, err,
+		)
+	}
+
+	fmt.Printf(
+		"Downloaded '%s' (%d bytes)  to '%s'\n",
+		filename,
+		written,
+		destPath,
+	)
 
 	return nil, nil
 }
@@ -92,4 +128,28 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 func (cfg *apiConfig) downloadFolder(path string, targetPath string, flags map[string]string) (*drive.File, error) {
 
 	return nil, nil
+}
+
+func (cfg *apiConfig) multiFilePrompt(filename string) (bool, error) {
+	prompt := fmt.Sprintf("Multiple instances of file '%s' found. Download the first one? (y/n)    ", filename)
+	input := bufio.NewReader(cfg.in)
+	scanner := bufio.NewScanner(input)
+	fmt.Print(prompt)
+	if !scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			return false, fmt.Errorf(
+				"error reading input: %w", err,
+			)
+		}
+
+		return false, ErrScannerEOF
+	}
+	result := scanner.Text()
+
+	if result != "y" && result != "Y" {
+		fmt.Println("Cancelling operation.")
+		return false, nil
+	}
+
+	return true, nil
 }

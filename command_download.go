@@ -9,8 +9,11 @@ func (cfg *apiConfig) commandDownload(args arguments) (*drive.File, error) {
 	case 1:
 		return nil, ErrMissingArgs
 	case 2:
-
+		source = args.positional[0]
+		target = args.positional[1]
+	default:
+		return nil, ErrTooManyArgs
 	}
-
 	return cfg.downloadFile(source, target, args.flags)
+
 }
