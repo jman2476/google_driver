@@ -18,13 +18,10 @@ var (
 )
 
 func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[string]string) (*drive.File, error) {
-	// look for file at drive location
 	dirId, filename, isFolder, err := cfg.ValidateDrivePath(path)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(path, targetPath)
-	fmt.Println(dirId, filename, isFolder, err)
 
 	if isFolder {
 		if _, ok := flags["r"]; ok {
@@ -32,9 +29,6 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 		}
 		return nil, ErrNeedRecursive
 	}
-	// if exists, download file
-	// query drive for file
-	// 		- get Id, get metadata
 	query := fmt.Sprintf(
 		"name = '%s' and '%s' in parents and trashed = false",
 		filename,
@@ -61,7 +55,6 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 	}
 
 	fileId := files.Files[0].Id
-	// use service.Files.Get(fileId).Download() to get data
 	res, err := cfg.service.Files.Get(fileId).Download()
 	if err != nil {
 		return nil, fmt.Errorf(
@@ -71,13 +64,12 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 	}
 	defer res.Body.Close()
 
-	// check for targetPath location
 	pwd, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("cannot read current directory: %w", err)
 	}
 	defer os.Chdir(pwd)
-	// if targetPath doesn't exist
+
 	err = os.Chdir(targetPath)
 	if err != nil {
 		fmt.Printf(
@@ -85,10 +77,6 @@ func (cfg *apiConfig) downloadFile(path string, targetPath string, flags map[str
 			targetPath, pwd,
 		)
 	}
-
-	//		- write file at current directory
-	// else
-	//		- write file at target directory
 
 	currDir, err := os.Getwd()
 	if err != nil {
